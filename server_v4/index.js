@@ -22,4 +22,4 @@ const { url } = await startStandaloneServer(server, {
   },
 });
 
-console.log("serevr ready at port", port);
+console.log("server ready at port", port);
