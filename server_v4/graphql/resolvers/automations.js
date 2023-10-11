@@ -1,29 +1,26 @@
 import automations from "../../temp.js";
 
-const totalAutomations = () => automations.length; //anonymous func
-
+const totalAutomations = () => automations.length;
 const allAutomations = () => automations;
-
-const newAutomation = (parent, args) => {
-  //create a new post object
-
-  const automation = {
+const newAutomation = (_, args) => {
+  let automation = {
+    ...args.automation,
     id: automations.length + 1,
-    title: args.title,
-    description: args.description,
-    video: args.video,
+    //id: Math.floor(Math.random() * 10000).toString()
   };
-
-  //push new automation to automation arrat
-
   automations.push(automation);
   return automation;
+};
+
+const singleAutomation = (_, args) => {
+  return automations.find((automation) => automation.id === args.id);
 };
 
 const automationResolvers = {
   Query: {
     totalAutomations,
     allAutomations,
+    singleAutomation,
   },
 
   Mutation: {
