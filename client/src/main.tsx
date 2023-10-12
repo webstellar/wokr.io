@@ -1,11 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -14,19 +9,19 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-client
+/* client
   .query({
     query: gql`
       query GetAutomations {
         allAutomations {
-          id
+          id 
           title
           description
         }
       }
     `,
   })
-  .then((result) => console.log(result));
+  .then((result) => console.log(result)); */
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ApolloProvider client={client}>
