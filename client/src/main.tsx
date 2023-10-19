@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { AuthProvider } from "./context/authContext.tsx";
+import { BrowserRouter } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import App from "./App.tsx";
 import "./index.css";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/",
+  uri: "http://localhost:8800/",
   cache: new InMemoryCache(),
 });
 
@@ -24,9 +26,13 @@ const client = new ApolloClient({
   .then((result) => console.log(result)); */
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ApolloProvider client={client}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </ApolloProvider>
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <ApolloProvider client={client}>
+          <App />
+        </ApolloProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
