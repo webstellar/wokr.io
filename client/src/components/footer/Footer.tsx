@@ -2,10 +2,18 @@ import { Link } from "react-router-dom";
 
 import logo from "../../assets/wokri_logo.png";
 import glassLogo from "../../assets/wokr_glass_logo.png";
+import lineLogo from "../../assets/Wokr_line.png";
 import Socials from "../socials/Socials";
 import { Input } from "antd";
 
 import { HiArrowNarrowRight } from "react-icons/hi";
+
+const myStyle = {
+  backgroundImage: `url(${lineLogo})`,
+  backgroundSize: "90%",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "50% 200%",
+};
 
 const Footer = () => {
   const d = new Date();
@@ -14,7 +22,8 @@ const Footer = () => {
   return (
     <footer className="bg-white">
       <div
-        className="mx-auto flex flex-grow flex-wrap max-w-screen-2xl items-center justify-between p-6 lg:px-8 bg-[url('../../assets/Wokr_line.png')] lg:gap-0 gap-y-20"
+        className="mx-auto flex flex-grow flex-wrap max-w-screen-2xl items-center justify-between p-6 lg:px-8 lg:gap-0 gap-y-20"
+        style={myStyle}
         aria-label="Global"
       >
         <div className="flex flex-col basis-full lg:basis-1/4">
