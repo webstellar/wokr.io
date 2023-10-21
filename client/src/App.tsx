@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
 import { useAllAutomationsQuery } from "./hooks/useAllAutomationsQuery";
 import { Automation } from "./types/Automation";
-import { useNavigate } from "react-router-dom";
+
+import Home from "./pages/Home";
 
 import { List } from "antd";
 import { AuthContext } from "./context/authContext";
@@ -21,6 +23,9 @@ const App: React.FC = () => {
 
   return (
     <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
       <List
         itemLayout="horizontal"
         dataSource={automation}
