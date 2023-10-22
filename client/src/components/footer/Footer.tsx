@@ -4,7 +4,6 @@ import logo from "../../assets/wokri_logo.png";
 import glassLogo from "../../assets/wokr_glass_logo.png";
 import lineLogo from "../../assets/Wokr_line.png";
 import Socials from "../socials/Socials";
-import { Input } from "antd";
 
 import { HiArrowNarrowRight } from "react-icons/hi";
 
@@ -26,6 +25,7 @@ const Footer = () => {
         style={myStyle}
         aria-label="Global"
       >
+        {/* Column 1*/}
         <div className="flex flex-col basis-full lg:basis-1/4">
           <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Wokr Marketplace</span>
@@ -52,12 +52,22 @@ const Footer = () => {
           <p className="font-pangram-light">
             Add Your Email Below To Keep Up With the Latest Announcements
           </p>
-          <Input
-            size="large"
-            placeholder="Email Address"
-            suffix={<HiArrowNarrowRight />}
-            className="font-pangram-light border-0 border-b-2 rounded-none focus:border-gray-950 "
-          />
+
+          <div className="pt-2 relative mx-auto text-gray-600 w-full">
+            <input
+              className="font-pangram-light border-0 border-b-2 rounded-none w-full ring-transparent"
+              type="email"
+              name="email"
+              placeholder="Email Address"
+            />
+            <button
+              title="submit"
+              type="submit"
+              className="absolute right-0 top-0 mt-3 mr-4"
+            >
+              <HiArrowNarrowRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

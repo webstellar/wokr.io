@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        "wokr-red-50": "#FFECF0",
         "wokr-red-100": "#D03D5A",
         "wokr-red-200": "#AE0A2B",
         "wokr-green-100": "#55C1AC",
