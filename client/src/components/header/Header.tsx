@@ -74,7 +74,7 @@ const Header = () => {
             Post a Job
           </Link>
           <Link
-            to="register"
+            to="/register"
             className="text-base font-pangram-normal leading-6 text-gray-50 border border-wokr-red-100 rounded-lg bg-wokr-red-100 py-2 px-5"
           >
             Get Started

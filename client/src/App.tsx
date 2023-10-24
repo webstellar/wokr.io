@@ -4,6 +4,8 @@ import { useAllAutomationsQuery } from "./hooks/useAllAutomationsQuery";
 import { Automation } from "./types/Automation";
 
 import Home from "./pages/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 
 import { List } from "antd";
 import { AuthContext } from "./context/authContext";
@@ -25,6 +27,8 @@ const App: React.FC = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <List
         itemLayout="horizontal"
