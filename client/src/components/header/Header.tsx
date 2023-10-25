@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { HiMenuAlt1, HiOutlinePlusCircle, HiOutlineX } from "react-icons/hi";
 import logo from "../../assets/wokri_logo.png";
 
+import RegisterModal from "../modal/RegisterModal";
+import LoginModal from "../modal/LoginModal";
+
 const homeMenu = [
   {
     id: 1,
@@ -25,6 +28,8 @@ const homeMenu = [
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [reveal, setReveal] = useState(false);
 
   return (
     <header className="bg-white">
@@ -64,23 +69,28 @@ const Header = () => {
           ))}
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center gap-x-5">
-          <Link
-            to="#"
+          <button
+            onClick={() => setReveal(!reveal)}
             className="text-base font-pangram-normal leading-6 text-gray-900 border border-gray-950 bg-transparent py-2 px-5 flex justify-center items-center gap-x-3 rounded-lg"
           >
             <span aria-hidden="true">
               <HiOutlinePlusCircle className="bg-wokr-green-100 rounded-full" />
             </span>
             Post a Job
-          </Link>
-          <Link
-            to="/register"
+          </button>
+          <button
+            onClick={() => setOpen(!open)}
             className="text-base font-pangram-normal leading-6 text-gray-50 border border-wokr-red-100 rounded-lg bg-wokr-red-100 py-2 px-5"
           >
             Get Started
-          </Link>
+          </button>
         </div>
       </nav>
+
+      {/* Create an Account */}
+
+      <RegisterModal setOpen={setOpen} open={open} />
+      <LoginModal setOpen={setReveal} open={reveal} />
 
       {/* MOBILE MENU*/}
       <Dialog

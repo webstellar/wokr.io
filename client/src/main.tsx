@@ -7,7 +7,7 @@ import App from "./App.tsx";
 import "./index.css";
 
 const client = new ApolloClient({
-  uri: "http://localhost:8800/",
+  uri: import.meta.env.VITE_GRAPHQL_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
