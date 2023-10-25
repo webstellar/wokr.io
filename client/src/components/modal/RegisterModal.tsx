@@ -24,6 +24,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        window.localStorage.setItem("emailFormRegistration", email);
         console.log(user);
       })
       .catch((error) => {
