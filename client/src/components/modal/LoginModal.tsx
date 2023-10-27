@@ -40,6 +40,8 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
         const token = credential.accessToken;
 
         const user = result.user;
+        console.log(user);
+        console.log("it works");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -119,6 +121,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
                             Password
                           </label>
                           <input
+                            autoComplete=""
                             id="password"
                             type="password"
                             name="password"
@@ -147,15 +150,18 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
                             Forgot password?
                           </Link>
                         </div>
+
+                        <div className="mb-3">
+                          <button
+                            type="submit"
+                            className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                          >
+                            Sign in
+                          </button>
+                        </div>
                       </form>
 
                       <div className="mb-3">
-                        <button
-                          type="submit"
-                          className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
-                        >
-                          Sign in
-                        </button>
                         <button
                           onClick={onGoogleLogin}
                           className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"

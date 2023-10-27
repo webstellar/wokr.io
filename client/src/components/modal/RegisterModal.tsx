@@ -2,7 +2,7 @@ import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import {
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
@@ -19,13 +19,13 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
 
   const cancelButtonRef = useRef(null);
 
-  const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         window.localStorage.setItem("emailFormRegistration", email);
-        console.log(user);
+        console.log(userCredential);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -40,6 +40,8 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
+        console.log(user);
+        console.log("it works");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -94,7 +96,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                         Create a new account
                       </Dialog.Title>
 
-                      <form className="mt-4" onSubmit={onLogin}>
+                      <form className="mt-4" onSubmit={onSignup}>
                         <div className="mb-3">
                           <label
                             htmlFor="email"
@@ -103,6 +105,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                             Email
                           </label>
                           <input
+                            autoComplete=""
                             id="email"
                             name="email"
                             type="email"
@@ -125,15 +128,18 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                             onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
+
+                        <div className="mb-3">
+                          <button
+                            type="submit"
+                            className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                          >
+                            Sign up
+                          </button>
+                        </div>
                       </form>
 
                       <div className="mb-3">
-                        <button
-                          type="submit"
-                          className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
-                        >
-                          Sign up
-                        </button>
                         <button
                           onClick={onGoogleLogin}
                           className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"

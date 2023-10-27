@@ -32,7 +32,7 @@ const Header = () => {
   const [reveal, setReveal] = useState(false);
 
   return (
-    <header className="bg-white">
+    <header className="bg-transparent absolute w-full">
       <nav
         className="mx-auto flex max-w-screen-2xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -134,13 +134,13 @@ const Header = () => {
               </div>
               <div className="py-6">
                 <Link
-                  to="#"
+                  to="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-normal leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Post a job
                 </Link>
                 <Link
-                  to="#"
+                  to="/register"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-normal leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Get Started
