@@ -1,35 +1,8 @@
-import React from "react";
-
-const offerings = [
-  {
-    id: 1,
-    title: "Sales & Prospecting",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia",
-  },
-  {
-    id: 2,
-    title: "Recruiting",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia",
-  },
-  {
-    id: 3,
-    title: "Data Research",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia",
-  },
-  {
-    id: 4,
-    title: "Marketing",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia",
-  },
-];
+import { offerings } from "../../data/landingPage";
 
 const Services = () => {
   return (
-    <div className="bg-transparent">
+    <section className="bg-transparent">
       <div className="-mt-40 mx-auto flex max-w-screen-2xl items-center justify-between lg:px-20 bg-white p-20 rounded-3xl border shadow-md gap-2">
         <div className="flex justify-around items-start">
           <div className="flex mt-4">
@@ -53,7 +26,7 @@ const Services = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

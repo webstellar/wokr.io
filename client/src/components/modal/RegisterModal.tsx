@@ -1,6 +1,6 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -14,10 +14,31 @@ type ModalProps = {
 };
 
 const RegisterModal = ({ setOpen, open }: ModalProps) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUserName] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
 
   const cancelButtonRef = useRef(null);
+
+  const handleNext = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const handlePrev = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const navigateToProfile = () => {
+    navigate("/profile");
+    setOpen(false);
+  };
+
+  const navigateToListing = () => {
+    navigate("/listing");
+    setOpen(false);
+  };
 
   const onSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +46,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
       .then((userCredential) => {
         const user = userCredential.user;
         window.localStorage.setItem("emailFormRegistration", email);
-        console.log(userCredential);
+        handleNext();
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -40,6 +61,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
+        handleNext();
         console.log(user);
         console.log("it works");
       })
@@ -88,84 +110,134 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                     className="flex flex-wrap content-center justify-center rounded-l-md bg-white"
                     style={{ width: "24rem", height: "32rem" }}
                   >
-                    <div className="w-72">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-base font-semibold leading-6 text-gray-900"
-                      >
-                        Create a new account
-                      </Dialog.Title>
+                    {currentStep === 1 && (
+                      <div className="w-72">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
+                          Create a new account
+                        </Dialog.Title>
 
-                      <form className="mt-4" onSubmit={onSignup}>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="email"
-                            className="mb-2 block text-xs font-semibold"
-                          >
-                            Email
-                          </label>
-                          <input
-                            autoComplete=""
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="Enter your email"
-                            className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
+                        <form className="mt-4" onSubmit={onSignup}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="email"
+                              className="mb-2 block text-xs font-semibold"
+                            >
+                              Email
+                            </label>
+                            <input
+                              autoComplete=""
+                              id="email"
+                              name="email"
+                              type="email"
+                              placeholder="Enter your email"
+                              className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+                              onChange={(e) => setEmail(e.target.value)}
+                            />
+                          </div>
 
-                        <div className="mb-3">
-                          <label className="mb-2 block text-xs font-semibold">
-                            Password
-                          </label>
-                          <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                        </div>
+                          <div className="mb-3">
+                            <label className="mb-2 block text-xs font-semibold">
+                              Password
+                            </label>
+                            <input
+                              id="password"
+                              type="password"
+                              name="password"
+                              placeholder="Password"
+                              className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="mb-3">
+                            <button
+                              type="submit"
+                              className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                            >
+                              Sign up
+                            </button>
+                          </div>
+                        </form>
 
                         <div className="mb-3">
                           <button
-                            type="submit"
-                            className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                            onClick={onGoogleLogin}
+                            className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"
                           >
-                            Sign up
+                            <img
+                              className="w-5 mr-2"
+                              src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+                              alt=""
+                            />
+                            Sign up with Google
                           </button>
                         </div>
-                      </form>
 
-                      <div className="mb-3">
-                        <button
-                          onClick={onGoogleLogin}
-                          className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"
-                        >
-                          <img
-                            className="w-5 mr-2"
-                            src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
-                            alt=""
-                          />
-                          Sign up with Google
-                        </button>
+                        <div className="text-center">
+                          <span className="text-xs text-gray-400 font-semibold">
+                            Already have an account?
+                          </span>
+                          <Link
+                            to="/register"
+                            className="text-xs font-semibold text-wokr-red-100"
+                          >
+                            Sign in
+                          </Link>
+                        </div>
                       </div>
+                    )}
 
-                      <div className="text-center">
-                        <span className="text-xs text-gray-400 font-semibold">
-                          Already have an account?
-                        </span>
-                        <Link
-                          to="/register"
-                          className="text-xs font-semibold text-wokr-red-100"
+                    {currentStep === 2 && (
+                      <div className="w-72">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
                         >
-                          {" "}
-                          Sign in
-                        </Link>
+                          Create your username
+                        </Dialog.Title>
+
+                        <form className="mt-4" onSubmit={onSignup}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="email"
+                              className="mb-2 block text-xs font-semibold"
+                            >
+                              Username
+                            </label>
+                            <input
+                              autoComplete=""
+                              id="username"
+                              name="username"
+                              type="text"
+                              placeholder="Create a username"
+                              className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+                              onChange={(e) => setUserName(e.target.value)}
+                            />
+                          </div>
+                        </form>
+
+                        <div className="mt-4 py-3 sm:flex sm:flex-row-reverse">
+                          <button
+                            type="button"
+                            className="inline-flex w-full justify-center rounded-md bg-wokr-red-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-wokr-red-200 sm:ml-3 sm:w-auto"
+                            onClick={navigateToProfile}
+                          >
+                            Next
+                          </button>
+                          <button
+                            type="button"
+                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                            onClick={navigateToListing}
+                            ref={cancelButtonRef}
+                          >
+                            Skip
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <div

@@ -183,7 +183,6 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
                           to="/register"
                           className="text-xs font-semibold text-wokr-red-100"
                         >
-                          {" "}
                           Sign up
                         </Link>
                       </div>
