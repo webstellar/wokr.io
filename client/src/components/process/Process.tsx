@@ -13,7 +13,7 @@ const Process = () => {
         value, and elevate your brand's impact.
       </p>
 
-      <div className="mt-5 flex flex-row max-w-7xl gap-x-10">
+      <div className="mt-5 flex flex-col lg:flex-row max-w-7xl gap-x-10">
         {processes.map((process) => (
           <ProcessCard key={process.id} data={process} />
         ))}

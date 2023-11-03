@@ -1,12 +1,22 @@
-import { Fragment, useRef, useState } from "react";
+//how to keep users logged in with useContext
+
+
+import React, { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  sendSignInLinkToEmail,
 } from "firebase/auth";
-import { auth, googleProvider } from "../../config/firebase.js";
+import {
+  auth,
+  googleProvider,
+  actionCodeSettings,
+} from "../../config/firebase.js";
+
+import { toast } from "react-toastify";
 
 type ModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,6 +50,19 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     setOpen(false);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => {
+        window.localStorage.setItem("emailForSignIn", email);
+        setEmail("");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
+
   const onSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
@@ -47,6 +70,13 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const user = userCredential.user;
         window.localStorage.setItem("emailFormRegistration", email);
         handleNext();
+        setEmail("");
+        setPassword("");
+        toast("Account created successfully", {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "success",
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -61,6 +91,11 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
+        toast("Account created successfully", {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "success",
+        });
         handleNext();
         console.log(user);
         console.log("it works");
@@ -111,7 +146,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                     style={{ width: "24rem", height: "32rem" }}
                   >
                     {currentStep === 1 && (
-                      <div className="w-72">
+                      <div className="md:w-72">
                         <Dialog.Title
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900"
@@ -191,7 +226,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                     )}
 
                     {currentStep === 2 && (
-                      <div className="w-72">
+                      <div className="md:w-72">
                         <Dialog.Title
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900"
@@ -241,7 +276,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                   </div>
 
                   <div
-                    className="flex flex-wrap content-center justify-center rounded-r-md bg-wokr-red-100"
+                    className="hidden lg:flex flex-wrap content-center justify-center rounded-r-md bg-wokr-red-100"
                     style={{ width: "24rem", height: "32rem" }}
                   ></div>
                 </div>

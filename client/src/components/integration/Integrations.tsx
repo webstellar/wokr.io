@@ -3,7 +3,7 @@ import IntegrationCard from "./IntegrationCard";
 
 const Integrations = () => {
   return (
-    <section className="h-screen w-full bg-transparent mx-auto flex flex-col gap-y-20 justify-center items-center max-w-screen-2xl">
+    <section className="h-auto py-20 lg:h-screen w-full bg-transparent mx-auto flex flex-col gap-y-20 justify-center items-center max-w-screen-2xl">
       <h3 className="font-pangram-medium text-4xl text-center">
         AI Integrations
       </h3>

@@ -5,13 +5,13 @@ import statementImage from "../../assets/wokrPro.png";
 
 const Statement = () => {
   return (
-    <div className="mx-auto flex flex-row max-w-screen-2xl items-center justify-between lg:px-20 p-8 lg:p-20 gap-y-10">
+    <div className="mx-auto flex flex-col lg:flex-row max-w-screen-2xl items-center justify-between lg:px-20 p-8 py-20 lg:p-20 gap-y-10">
       <div className="h-full w-full">
         <img src={statementImage} alt="woman standing" />
       </div>
       <div className="flex flex-col items-start gap-10">
         <img src={Logo} alt="wokr official logo" />
-        <h3 className="font-pangram-medium text-4xl text-left">
+        <h3 className="font-pangram-medium text-3xl md:text-4xl text-left">
           Advance solutions and professional talent for businesses
         </h3>
 
@@ -44,9 +44,12 @@ const Statement = () => {
         <button
           title="button"
           type="button"
-          className="rounded-lg border border-wokr-red-100 bg-transparent hover:bg-wokr-red-100 px-10 py-4  text-gray-950 hover:text-gray-50"
+          className="rounded-lg border border-wokr-red-100 bg-transparent hover:bg-wokr-red-100 md:px-10 md:py-4 py-2 px-6 text-gray-950 hover:text-gray-50"
         >
-          <Link to="/listing" className="text-2xl font-pangram-medium">
+          <Link
+            to="/listing"
+            className="text-lg md:text-2xl font-pangram-medium"
+          >
             Learn more
           </Link>
         </button>

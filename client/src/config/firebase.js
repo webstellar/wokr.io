@@ -16,6 +16,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
 
+export const actionCodeSettings = {
+  // URL you want to redirect back to. The domain (www.example.com) for this
+  // URL must be in the authorized domains list in the Firebase Console.
+  url: import.meta.env.VITE_CONFIRMATION_EMAIL_REDIRECT,
+  handleCodeInApp: true,
+};
+
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export default app;

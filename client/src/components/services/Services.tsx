@@ -3,7 +3,7 @@ import { offerings } from "../../data/data";
 const Services = () => {
   return (
     <section className="bg-transparent">
-      <div className="-mt-40 mx-auto flex max-w-screen-2xl items-center justify-between lg:px-20 bg-white p-8 lg:p-20 lg:rounded-3xl border shadow-md">
+      <div className="-mt-40 mx-auto flex max-w-screen-2xl items-center justify-between lg:px-20 bg-white p-8 lg:p-20 lg:rounded-3xl border lg:shadow-md shadow-none">
         <div className="flex flex-wrap lg:flex-nowrap gap-4 justify-around items-start gap-y-10 py-20">
           <div className="flex mt-4">
             <h3 className="font-pangram-medium text-4xl text-left">
