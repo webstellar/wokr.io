@@ -43,7 +43,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        const token = credential?.accessToken;
         const user = result.user;
         toast("Logged in successfully", {
           hideProgressBar: true,
@@ -56,9 +56,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-
         const email = error.customData.email;
-
         const credential = GoogleAuthProvider.credentialFromError(error);
       });
   };

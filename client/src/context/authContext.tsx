@@ -1,14 +1,23 @@
 import React, { useReducer, createContext } from "react";
 
 //Types
+type payloadType = {
+  email: string;
+  token: string;
+};
+
+type userType = {
+  email: string;
+  token: string;
+};
 
 type stateType = {
-  user: string | null;
+  user: userType | null;
 };
 
 type dispatchType = {
   type: string;
-  payload: string;
+  payload: payloadType;
 };
 
 //Reducer
@@ -16,6 +25,8 @@ const firebaseReducer = (state: stateType, action: dispatchType) => {
   switch (action.type) {
     case "LOGGED_IN_USER":
       return { ...state, user: action.payload };
+    case "LOGGED_OUT":
+      return { ...state, user: null };
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import { ProcessBlurb } from "../../type/Types";
+import { ProcessBlurb } from "../../types/Types";
 
 interface processProps {
   data: ProcessBlurb;

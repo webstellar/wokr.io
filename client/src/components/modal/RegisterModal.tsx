@@ -1,20 +1,15 @@
 //how to keep users logged in with useContext
 
-
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  sendSignInLinkToEmail,
 } from "firebase/auth";
-import {
-  auth,
-  googleProvider,
-  actionCodeSettings,
-} from "../../config/firebase.js";
+import { auth, googleProvider } from "../../config/firebase.js";
+import { AuthContext } from "../../context/authContext.js";
 
 import { toast } from "react-toastify";
 
@@ -28,7 +23,9 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUserName] = useState("");
+  const [isAvailable, setIsAvailable] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
+  const { dispatch } = useContext(AuthContext);
 
   const cancelButtonRef = useRef(null);
 
@@ -36,12 +33,14 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handlePrev = () => {
+  /*   
+const handlePrev = () => {
     setCurrentStep(currentStep - 1);
-  };
+  }; 
+  */
 
   const navigateToProfile = () => {
-    navigate("/profile");
+    navigate("/setup-profile");
     setOpen(false);
   };
 
@@ -50,6 +49,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     setOpen(false);
   };
 
+  /*   
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
@@ -61,13 +61,22 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
-  };
+  }; 
+  */
 
   const onSignup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+
+        console.log(user);
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: user?.email, token: user?.accessToken },
+        });
+
         window.localStorage.setItem("emailFormRegistration", email);
         handleNext();
         setEmail("");
@@ -81,6 +90,11 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        toast(errorCode, {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "error",
+        });
         console.log(errorCode, errorMessage);
       });
   };
@@ -89,16 +103,20 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        const token = credential!.accessToken;
         const user = result.user;
         toast("Account created successfully", {
           hideProgressBar: true,
           autoClose: 2000,
           type: "success",
         });
+
+        window.localStorage.setItem("emailFormRegistration", user.email!);
+
         handleNext();
         console.log(user);
         console.log("it works");
+        console.log(token); // Fix for Problem 1
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -106,6 +124,14 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         const email = error.customData.email;
         const credential = GoogleAuthProvider.credentialFromError(error);
       });
+  };
+
+  const onDisplaySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (isAvailable) {
+      //submit the form
+    }
   };
 
   return (
@@ -129,7 +155,7 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -226,51 +252,52 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
                     )}
 
                     {currentStep === 2 && (
-                      <div className="md:w-72">
+                      <div className="md:w-72 mx-auto">
                         <Dialog.Title
                           as="h3"
                           className="text-base font-semibold leading-6 text-gray-900"
                         >
-                          Create your username
+                          Create your display name
                         </Dialog.Title>
 
-                        <form className="mt-4" onSubmit={onSignup}>
+                        <form className="mt-4" onSubmit={onDisplaySubmit}>
                           <div className="mb-3">
                             <label
                               htmlFor="email"
                               className="mb-2 block text-xs font-semibold"
                             >
-                              Username
+                              Display name
                             </label>
                             <input
                               autoComplete=""
                               id="username"
                               name="username"
                               type="text"
-                              placeholder="Create a username"
+                              placeholder="Create your display name"
                               className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
                               onChange={(e) => setUserName(e.target.value)}
                             />
                           </div>
-                        </form>
 
-                        <div className="mt-4 py-3 sm:flex sm:flex-row-reverse">
-                          <button
-                            type="button"
-                            className="inline-flex w-full justify-center rounded-md bg-wokr-red-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-wokr-red-200 sm:ml-3 sm:w-auto"
-                            onClick={navigateToProfile}
-                          >
-                            Next
-                          </button>
-                          <button
-                            type="button"
-                            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onClick={navigateToListing}
-                            ref={cancelButtonRef}
-                          >
-                            Skip
-                          </button>
-                        </div>
+                          <div className="mt-4 py-3 sm:flex sm:flex-row-reverse">
+                            <button
+                              type="button"
+                              className="inline-flex w-full justify-center rounded-md bg-wokr-red-100 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-wokr-red-200 sm:ml-3 sm:w-auto"
+                              onClick={navigateToProfile}
+                            >
+                              Next
+                            </button>
+
+                            <button
+                              type="button"
+                              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                              onClick={navigateToListing}
+                              ref={cancelButtonRef}
+                            >
+                              Skip
+                            </button>
+                          </div>
+                        </form>
                       </div>
                     )}
                   </div>

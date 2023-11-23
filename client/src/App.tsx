@@ -6,6 +6,7 @@ import { Automation } from "./types/Automation";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ProfileSetup from "./pages/auth/ProfileSetup";
 
 import { List } from "antd";
 import { AuthContext } from "./context/authContext";
@@ -29,6 +30,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/setup-profile" element={<ProfileSetup />} />
       </Routes>
       <List
         itemLayout="horizontal"

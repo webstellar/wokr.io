@@ -1,4 +1,4 @@
-import { IntegrationsAi } from "../../type/Types";
+import { IntegrationsAi } from "../../types/Types";
 
 interface integrationProps {
   data: IntegrationsAi;
