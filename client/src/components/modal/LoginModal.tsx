@@ -1,6 +1,7 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext.js";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -15,16 +16,21 @@ type ModalProps = {
 };
 
 const LoginModal = ({ setOpen, open }: ModalProps) => {
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const cancelButtonRef = useRef(null);
 
   const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        setLoading(false);
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
@@ -50,14 +56,18 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
           autoClose: 2000,
           type: "success",
         });
-        console.log(user);
-        console.log("it works");
+        console.log(user, token);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
+        //const errorCode = error.code;
+        //const errorMessage = error.message;
+        //const email = error.customData.email;
         const credential = GoogleAuthProvider.credentialFromError(error);
+        toast(credential, {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "error",
+        });
       });
   };
 
@@ -165,10 +175,38 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
 
                           <div className="mb-3">
                             <button
+                              title="signUp"
                               type="submit"
-                              className="mb-1.5 block w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                              className="flex items-center justify-center mb-1.5 w-full text-center text-white bg-wokr-red-100 hover:bg-wokr-red-200 px-2 py-1.5 rounded-md"
+                              disabled={!email || !password || loading}
                             >
-                              Sign in
+                              {loading ? (
+                                <>
+                                  <svg
+                                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M12 2C6.477 2 2 6.477 2 12c0 1.656.337 3.223 0.943 4.65C3.65 16.73 4.26 17 5 17c.74 0 1.35-.27 1.057-.35C7.663 15.223 8 13.656 8 12c0-2.21-.895-4.21-2.343-5.657C4.105 4.895 2.105 4 0 4"
+                                    ></path>
+                                  </svg>
+                                  Sign in ...
+                                </>
+                              ) : (
+                                "Sign in"
+                              )}
                             </button>
                           </div>
                         </form>

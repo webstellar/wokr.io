@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import Layout from "../components/layout/Layout";
 import HomeHero from "../components/hero/HomeHero";
 import Services from "../components/services/Services";
@@ -7,10 +7,15 @@ import Process from "../components/process/Process";
 import Statement from "../components/statement/Statement";
 import GetStarted from "../components/getstarted/GetStarted";
 
+import { AuthContext } from "../context/authContext";
+
 const Home = () => {
+  const { state } = useContext(AuthContext);
+
   return (
     <Fragment>
       <Layout>
+        {JSON.stringify(state.user)}
         <HomeHero />
         <Services />
         <Integrations />

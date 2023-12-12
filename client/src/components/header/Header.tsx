@@ -135,13 +135,13 @@ const Header = () => {
               <div className="py-6">
                 <Link
                   to="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-normal leading-7 text-gray-900 hover:bg-gray-50"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-pangram-bold leading-7  hover:bg-gray-50 text-wokr-red-100"
                 >
                   Post a job
                 </Link>
                 <Link
                   to="/register"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-normal leading-7 text-gray-900 hover:bg-gray-50"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-lg font-normal leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Get Started
                 </Link>

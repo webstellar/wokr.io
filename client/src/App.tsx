@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAllAutomationsQuery } from "./hooks/useAllAutomationsQuery";
 import { Automation } from "./types/Automation";
@@ -6,23 +5,14 @@ import { Automation } from "./types/Automation";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import ProfileSetup from "./pages/auth/ProfileSetup";
+import Profile from "./pages/Profile";
 
 import { List } from "antd";
-import { AuthContext } from "./context/authContext";
+import CompleteRegistration from "./pages/auth/CompleteRegistration";
 
 const App: React.FC = () => {
   const automations = useAllAutomationsQuery();
   const automation = automations?.data?.allAutomations;
-
-  const { state, dispatch } = useContext(AuthContext);
-
-  const changeUsername = () => {
-    dispatch({
-      type: "LOGGED_IN_USER",
-      payload: "Peter Onyegbule",
-    });
-  };
 
   return (
     <>
@@ -30,7 +20,11 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/setup-profile" element={<ProfileSetup />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/complete-registration"
+          element={<CompleteRegistration />}
+        />
       </Routes>
       <List
         itemLayout="horizontal"
@@ -41,10 +35,6 @@ const App: React.FC = () => {
           </List.Item>
         )}
       ></List>
-
-      {JSON.stringify(state.user)}
-
-      <button onClick={changeUsername}>Create Something!</button>
     </>
   );
 };

@@ -123,3 +123,32 @@ export const processes = [
     icon: processShare,
   },
 ];
+
+export const homeMenu = [
+  {
+    id: 1,
+    url: "/my-orders",
+    title: "Orders",
+  },
+  {
+    id: 2,
+    url: "/my-selling-profile",
+    title: "Switch to Selling",
+  },
+  {
+    id: 3,
+    url: "/my-buying-profile",
+    title: "Switch to Buying",
+  },
+];
+
+export const profileLinks = [
+  { href: "/profile", label: "Profile" },
+  { href: "/post-job", label: "Post a Job" },
+];
+export const settinglinks = [
+  { href: "/become-seller", label: "Become a Seller" },
+  { href: "/account-settings", label: "Settings" },
+  { href: "/support", label: "Help & Support" },
+  { href: "/billing", label: "Billing" },
+];

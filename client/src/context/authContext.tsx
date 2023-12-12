@@ -1,4 +1,6 @@
-import React, { useReducer, createContext } from "react";
+import { useReducer, createContext, useEffect } from "react";
+import { auth } from "./../config/firebase.js";
+import { getIdTokenResult, onAuthStateChanged } from "firebase/auth";
 
 //Types
 type payloadType = {
@@ -17,7 +19,7 @@ type stateType = {
 
 type dispatchType = {
   type: string;
-  payload: payloadType;
+  payload: payloadType | null;
 };
 
 //Reducer
@@ -50,13 +52,29 @@ const AuthContext = createContext<{
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(firebaseReducer, initialState);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const idTokenResult = await getIdTokenResult(user);
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: idTokenResult.token }, // Access the 'token' property
+        });
+      } else {
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: null, // Allow null as a valid value
+        });
+      }
+    });
+
+    //cleanup
+    return () => unsubscribe();
+  }, []);
+
   const value = { state, dispatch };
 
-  return (
-    <AuthContext.Provider value={value}>
-      <>{children}</>
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export { AuthContext, AuthProvider };
