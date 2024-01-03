@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   signInWithPopup,
@@ -11,11 +11,12 @@ import {
   googleProvider,
   actionCodeSettings,
 } from "../../config/firebase.js";
-
+import { AuthContext } from "../../context/authContext.js";
 import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -58,8 +59,13 @@ const Register = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential!.accessToken;
+        const idTokenResult = credential!.accessToken;
         const user = result.user;
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: idTokenResult },
+        });
         setLoading(false);
         toast("Account created successfully", {
           hideProgressBar: true,

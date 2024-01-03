@@ -1,4 +1,4 @@
-const automations = [
+export const automations = [
   {
     id: 1,
     title: "First Automation Product",
@@ -55,4 +55,29 @@ const automations = [
   },
 ];
 
-export default automations;
+export const profiles = [
+  {
+    id: "1",
+    name: "Peter Onyegbule",
+    email: "pete.onyegbule@gmail.com",
+    profilePicture: "",
+  },
+  {
+    id: "2",
+    name: "Jenny Onyegbule",
+    email: "jenny.onyegbule@gmail.com",
+    profilePicture: "",
+  },
+  {
+    id: "3",
+    name: "Gladys Onyegbule",
+    email: "gladys.onyegbule@gmail.com",
+    profilePicture: "",
+  },
+  {
+    id: "4",
+    name: "Janet Onyegbule",
+    email: "janette.onyegbule@gmail.com",
+    profilePicture: "",
+  },
+];

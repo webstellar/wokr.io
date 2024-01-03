@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "./context/authContext.tsx";
 import { BrowserRouter } from "react-router-dom";
@@ -7,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import App from "./App.tsx";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_GRAPHQL_ENDPOINT,
@@ -25,10 +25,13 @@ const client = new ApolloClient({
       }
     `,
   })
-  .then((result) => console.log(result)); */
+  .then((result) => console.log(result)); 
+  */
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <GoogleReCaptchaProvider
+    reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+  >
     <BrowserRouter>
       <AuthProvider>
         <ApolloProvider client={client}>
@@ -37,5 +40,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </ApolloProvider>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </GoogleReCaptchaProvider>
 );

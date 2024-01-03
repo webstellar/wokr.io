@@ -1,5 +1,7 @@
 export const typeDefs = `#graphql
 
+
+
   type AutomationImages {
     id: ID!
     url: String!
@@ -20,10 +22,21 @@ export const typeDefs = `#graphql
     images: [AutomationImages!]!
   }
 
+  type Profile {
+    id: ID!
+    name: String!
+    email: String!
+    profilePicture: String!
+  }
+
   type Query {
     totalAutomations: Int!
+    totalProfiles: Int!
     allAutomations: [Automation]
+    allProfiles: [Profile]
     singleAutomation(id: ID!): Automation
+    singleProfile(id: ID!): Profile
+    me: String!
   }
 
   #mutations
@@ -31,6 +44,9 @@ export const typeDefs = `#graphql
     newAutomation(
      automation: AddAutomationInput!
     ): Automation
+    newProfile(
+      profile: AddProfileInput!
+    ): Profile
   }
 
   input AddAutomationInput {
@@ -41,7 +57,14 @@ export const typeDefs = `#graphql
     images: [AddAutomationImageInput!]
   }
 
-input AddAutomationPlatformInput {
+  input AddProfileInput {
+    name: String!
+    email: String!
+    profilePicture: String!
+  }
+
+
+  input AddAutomationPlatformInput {
     id: ID!
     title: String!
     iconUrl: String!

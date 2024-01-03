@@ -5,7 +5,7 @@ import { Automation } from "./types/Automation";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Profile from "./pages/Profile";
+import Profile from "./pages/SetupProfile";
 
 import { List } from "antd";
 import CompleteRegistration from "./pages/auth/CompleteRegistration";
@@ -20,7 +20,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/setup-profile" element={<Profile />} />
         <Route
           path="/complete-registration"
           element={<CompleteRegistration />}

@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  getIdToken,
 } from "firebase/auth";
 import { auth, googleProvider } from "../../config/firebase.js";
 import { toast } from "react-toastify";
@@ -28,15 +29,23 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
     e.preventDefault();
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
+        const idTokenResult = await getIdToken(user);
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: idTokenResult },
+        });
+
         setLoading(false);
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
           type: "success",
         });
-        console.log(user);
+        setTimeout(function () {
+          navigate("/post-a-job");
+        }, 2000);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -49,13 +58,23 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
+        const idTokenResult = credential?.accessToken;
         const user = result.user;
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: idTokenResult },
+        });
+
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
           type: "success",
         });
+
+        setTimeout(function () {
+          navigate("/post-a-job");
+        }, 2000);
         console.log(user, token);
       })
       .catch((error) => {

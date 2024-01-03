@@ -1,14 +1,15 @@
 import { Fragment } from "react";
 import Layout from "../components/layout/Layout";
+import EditProfile from "../components/profile/EditProfile";
 
-const Profile = () => {
+const SetupProfile = () => {
   return (
     <Fragment>
       <Layout>
-        <div>Text</div>
+        <EditProfile />
       </Layout>
     </Fragment>
   );
 };
 
-export default Profile;
+export default SetupProfile;

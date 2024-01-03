@@ -54,8 +54,15 @@ const LoggedInHeader = () => {
     }
   }
 
+  const currentUrl = "/";
+  console.log(window.location.pathname);
+
   return (
-    <header className="bg-transparent absolute w-full">
+    <header
+      className={`${
+        window.location.pathname == currentUrl ? "absolute" : "'"
+      } bg-transparent w-full`}
+    >
       <nav
         className="mx-auto flex max-w-screen-2xl items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -154,17 +161,17 @@ const LoggedInHeader = () => {
                     {profileLinks.map((link, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (
-                          <button
-                            className={`${
-                              active
-                                ? "bg-wokr-red-100 text-white"
-                                : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                          >
-                            <Link to={link.href} className="flex">
+                          <Link to={link.href} className="flex">
+                            <button
+                              className={`${
+                                active
+                                  ? "bg-wokr-red-100 text-white"
+                                  : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            >
                               {link.label}
-                            </Link>
-                          </button>
+                            </button>
+                          </Link>
                         )}
                       </Menu.Item>
                     ))}
@@ -174,17 +181,17 @@ const LoggedInHeader = () => {
                     {settinglinks.map((link, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (
-                          <button
-                            className={`${
-                              active
-                                ? "bg-wokr-red-100 text-white"
-                                : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                          >
-                            <Link to={link.href} className="flex">
+                          <Link to={link.href} className="flex">
+                            <button
+                              className={`${
+                                active
+                                  ? "bg-wokr-red-100 text-white"
+                                  : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            >
                               {link.label}
-                            </Link>
-                          </button>
+                            </button>
+                          </Link>
                         )}
                       </Menu.Item>
                     ))}

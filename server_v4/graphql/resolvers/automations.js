@@ -1,7 +1,9 @@
-import automations from "../../temp.js";
+import { automations } from "../../temp.js";
 
 const totalAutomations = () => automations.length;
+
 const allAutomations = () => automations;
+
 const newAutomation = (_, args) => {
   let automation = {
     ...args.automation,
@@ -16,6 +18,7 @@ const singleAutomation = (_, args) => {
   return automations.find((automation) => automation.id === args.id);
 };
 
+//the main deal
 const automationResolvers = {
   Query: {
     totalAutomations,

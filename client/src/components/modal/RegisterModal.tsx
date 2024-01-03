@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useRef, useState, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -11,7 +11,7 @@ import {
   googleProvider,
   actionCodeSettings,
 } from "../../config/firebase.js";
-
+import { AuthContext } from "../../context/authContext.js";
 import { toast } from "react-toastify";
 
 type ModalProps = {
@@ -21,6 +21,7 @@ type ModalProps = {
 
 const RegisterModal = ({ setOpen, open }: ModalProps) => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const cancelButtonRef = useRef(null);
@@ -64,8 +65,14 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential!.accessToken;
+        const idTokenResult = credential!.accessToken;
         const user = result.user;
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: idTokenResult },
+        });
+
         setLoading(false);
         toast("Account created successfully", {
           hideProgressBar: true,
@@ -76,9 +83,6 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         window.localStorage.setItem("emailForRegistration", user.email!);
 
         handleNext();
-        console.log(user);
-        console.log("it works");
-        console.log(token); // Fix for Problem 1
       })
       .catch((error) => {
         const errorCode = error.code;

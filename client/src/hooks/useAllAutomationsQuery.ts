@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
 
-
 export const useAllAutomationsQuery = () => {
   const data = useQuery(
     gql`

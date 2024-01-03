@@ -152,3 +152,79 @@ export const settinglinks = [
   { href: "/support", label: "Help & Support" },
   { href: "/billing", label: "Billing" },
 ];
+
+export const languages = [
+  { value: "Mandarin Chinese", label: "Mandarin Chinese" },
+  { value: "Spanish", label: "Spanish" },
+  { value: "English", label: "English" },
+  { value: "Hindi", label: "Hindi" },
+  { value: "Bengali", label: "Bengali" },
+  { value: "Portuguese", label: "Portuguese" },
+  { value: "Russian", label: "Russian" },
+  { value: "Japanese", label: "Japanese" },
+  { value: "Western Punjabi", label: "Western Punjabi" },
+  { value: "Marathi", label: "Marathi" },
+  { value: "Telugu", label: "Telugu" },
+  { value: "Wu Chinese", label: "Wu Chinese" },
+  { value: "Turkish", label: "Turkish" },
+  { value: "Korean", label: "Korean" },
+  { value: "French", label: "French" },
+  { value: "German", label: "German" },
+  { value: "Vietnamese", label: "Vietnamese" },
+  { value: "Tamil", label: "Tamil" },
+  { value: "Yue Chinese", label: "Yue Chinese" },
+  { value: "Urdu", label: "Urdu" },
+];
+
+export const languageLevels = [
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "proficient", label: "Proficient" },
+  { value: "native", label: "Native" },
+];
+
+export const skillLevels = [
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "proficient", label: "Proficient" },
+];
+
+export const skills = [
+  { value: "socialm media management", label: "Social Media Management" },
+  { value: "digital marketing", label: "Digital Marketing" },
+  { value: "web scraping", label: "Web Scraping" },
+  { value: "web development", label: "Web Development" },
+];
+
+export const automationTools = [
+  { value: "uipath", label: "UiPath" },
+  { value: "blueprism", label: "Blue Prism" },
+  { value: "automationanywhere", label: "Automation Anywhere" },
+  { value: "ansible", label: "Ansible" },
+  { value: "chef", label: "Chef" },
+  { value: "puppet", label: "Puppet" },
+  { value: "jenkins", label: "Jenkins" },
+  { value: "gitlabci", label: "GitLab CI/CD" },
+  { value: "circleci", label: "CircleCI" },
+  { value: "nintex", label: "Nintex" },
+  { value: "zapier", label: "Zapier" },
+  { value: "powerautomate", label: "Microsoft Power Automate" },
+  { value: "terraform", label: "Terraform" },
+  { value: "cloudformation", label: "AWS CloudFormation" },
+  { value: "selenium", label: "Selenium" },
+  { value: "appium", label: "Appium" },
+  { value: "cypress", label: "Cypress" },
+  { value: "hubspot", label: "HubSpot" },
+  { value: "marketo", label: "Marketo" },
+  { value: "informatica", label: "Informatica PowerCenter" },
+  { value: "apachenifi", label: "Apache NiFi" },
+  { value: "talend", label: "Talend" },
+  { value: "zendesk", label: "Zendesk" },
+  { value: "freshdesk", label: "Freshdesk" },
+];
+
+export const automationLevels = [
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "proficient", label: "Proficient" },
+];
