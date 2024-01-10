@@ -65,12 +65,12 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential!.accessToken;
+        const idTokenResult = credential!.idToken;
         const user = result.user;
 
         dispatch({
           type: "LOGGED_IN_USER",
-          payload: { email: String(user.email), token: idTokenResult },
+          payload: { email: String(user.email), token: String(idTokenResult) },
         });
 
         setLoading(false);
@@ -94,6 +94,12 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
         console.log(errorMessage);
         console.log(email);
         console.log(credential);
+
+        toast(errorMessage, {
+          hideProgressBar: true,
+          autoClose: 2000,
+          type: "error",
+        });
       });
   };
 

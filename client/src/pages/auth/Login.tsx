@@ -50,25 +50,33 @@ const Login = () => {
   const onGoogleLogin = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
+        console.log(result);
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
+        const idTokenResult = credential?.idToken;
         const user = result.user;
+
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: { email: String(user.email), token: String(idTokenResult) },
+        });
+
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
           type: "success",
         });
+
         setTimeout(function () {
           navigate("/post-a-job");
         }, 2000);
-        console.log(user, token);
+        console.log(user, idTokenResult);
       })
       .catch((error) => {
         //const errorCode = error.code;
-        //const errorMessage = error.message;
+        const errorMessage = error.message;
         //const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        toast(credential, {
+        //const credential = GoogleAuthProvider.credentialFromError(error);
+        toast(errorMessage, {
           hideProgressBar: true,
           autoClose: 2000,
           type: "error",

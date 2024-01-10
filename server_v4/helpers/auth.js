@@ -1,15 +1,23 @@
-let authorized = true;
+import admin from "firebase-admin";
+import { getAuth } from "firebase-admin/auth";
 
-export function authCheck(req, res, next = (f) => f) {
-  if (!req.headers.authtoken) throw new Error("Unauthorized");
+import serviceAccount from "../config/_fbServiceAccountKey.json" assert { type: "json" };
+//const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
-  //token validity check
+// Initialize the Firebase app with credentials
+const app = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
-  const valid = req.headers.authtoken === "secret";
-
-  if (!valid) {
-    throw new Error("Unauthorized");
-  } else {
-    next();
+// Auth check function
+export const authCheck = async (req) => {
+  try {
+    const currentUser = await getAuth().verifyIdToken(req.headers.authtoken);
+    console.log("CURRENT USER", currentUser);
+    return currentUser;
+  } catch (error) {
+    console.log("AUTH CHECK ERROR", error);
+    console.log("REQUEST ", req.headers.authtoken);
+    throw new Error("Invalid or expired token");
   }
-}
+};

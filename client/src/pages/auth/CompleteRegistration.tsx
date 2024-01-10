@@ -4,6 +4,8 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase.js";
 import { AuthContext } from "../../context/authContext.js";
+import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
+import { useMutation } from "@apollo/client";
 
 import {
   signInWithEmailLink,
@@ -22,6 +24,8 @@ const CompleteRegistration = () => {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+
+  const [createUser] = useMutation(useNewProfileMutation, {});
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForSignIn")!); // Use non-null assertion operator
@@ -81,6 +85,12 @@ const CompleteRegistration = () => {
             type: "LOGGED_IN_USER",
             payload: { email: String(user.email), token: idTokenResult },
           });
+
+          const graphqlUser = await createUser({
+            variables: { email: user.email, username: "Peter" },
+          });
+
+          console.log("newProile ", graphqlUser);
 
           handleNext();
         })

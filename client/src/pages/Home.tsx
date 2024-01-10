@@ -7,7 +7,15 @@ import Process from "../components/process/Process";
 import Statement from "../components/statement/Statement";
 import GetStarted from "../components/getstarted/GetStarted";
 
+import { List } from "antd";
+
+import { useAllAutomationsQuery } from "../hooks/useAllAutomationsQuery";
+import { Automation } from "../types/Automation";
+
 const Home = () => {
+  const automations = useAllAutomationsQuery();
+  const automation = automations?.data?.allAutomations;
+
   return (
     <Fragment>
       <Layout>
@@ -19,6 +27,20 @@ const Home = () => {
           <Statement />
           <GetStarted />
         </div>
+
+        <List
+          className="-z-10"
+          itemLayout="horizontal"
+          dataSource={automation}
+          renderItem={(item: Automation) => (
+            <List.Item key={item.id}>
+              <List.Item.Meta
+                title={item.title}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        ></List>
       </Layout>
     </Fragment>
   );

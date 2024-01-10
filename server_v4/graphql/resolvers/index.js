@@ -1,14 +1,14 @@
 import automationResolvers from "./automations.js";
-import profileResolvers from "./auth.js";
+import userResolvers from "./auth.js";
 
 const resolvers = {
   Query: {
     ...automationResolvers.Query,
-    ...profileResolvers.Query,
+    ...userResolvers.Query,
   },
   Mutation: {
     ...automationResolvers.Mutation,
-    ...profileResolvers.Mutation,
+    ...userResolvers.Mutation,
   },
 };
 

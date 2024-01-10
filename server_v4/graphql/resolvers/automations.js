@@ -1,14 +1,17 @@
 import { automations } from "../../temp.js";
+import { authCheck } from "../../helpers/auth.js";
 
 const totalAutomations = () => automations.length;
 
-const allAutomations = () => automations;
+const allAutomations = async (_, args, { req }) => {
+  await authCheck(req);
+  return automations;
+};
 
 const newAutomation = (_, args) => {
   let automation = {
     ...args.automation,
     id: automations.length + 1,
-    //id: Math.floor(Math.random() * 10000).toString()
   };
   automations.push(automation);
   return automation;

@@ -1,40 +1,46 @@
 import { profiles } from "../../temp.js";
 import { authCheck } from "../../helpers/auth.js";
+import shortid from "shortid";
 
-const totalProfiles = () => profiles.length;
-const allProfiles = () => profiles;
-const singleProfile = (_, args) => {
-  return profiles.find((profile) => profile.id === args.id);
+//models
+import { User } from "../../models/user.js";
+
+const createUser = async (_, args, { req }) => {
+  const currentUser = await authCheck(req);
+  const user = await User.findOne({ email: currentUser.email });
+
+  return user
+    ? user
+    : new User({
+        email: currentUser.email,
+        username: shortid.generate(), //temporary
+      }).save();
 };
-const newProfile = (_, args, { req, res }) => {
-  authCheck(req, res);
 
-  let profile = {
-    ...args.profile,
-    id: profiles.length + 1,
-  };
-
-  profiles.push(profile);
-  return profile;
-};
-
-const me = (_, args, { req, res }) => {
-  authCheck(req, res);
+const me = async (_, args, { req }) => {
+  await authCheck(req);
   return "Peter";
 };
 
+const totalUsers = () => profiles.length;
+const allUsers = () => profiles;
+const singleUser = (_, args) => {
+  return profiles.find((profile) => profile.id === args.id);
+};
+
 //the main deal
-const profileResolvers = {
+const userResolvers = {
   Query: {
-    singleProfile,
-    totalProfiles,
-    allProfiles,
+    createUser,
+    singleUser,
+    totalUsers,
+    allUsers,
     me,
   },
 
   Mutation: {
-    newProfile,
+    createUser,
   },
 };
 
-export default profileResolvers;
+export default userResolvers;

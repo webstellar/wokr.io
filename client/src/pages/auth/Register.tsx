@@ -59,12 +59,12 @@ const Register = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential!.accessToken;
+        const idTokenResult = credential!.idToken;
         const user = result.user;
 
         dispatch({
           type: "LOGGED_IN_USER",
-          payload: { email: String(user.email), token: idTokenResult },
+          payload: { email: String(user.email), token: String(idTokenResult) },
         });
         setLoading(false);
         toast("Account created successfully", {
@@ -78,7 +78,6 @@ const Register = () => {
         handleNext();
         console.log(user);
         console.log("it works");
-        console.log(token); // Fix for Problem 1
       })
       .catch((error) => {
         const errorCode = error.code;

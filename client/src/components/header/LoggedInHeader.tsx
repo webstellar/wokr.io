@@ -20,7 +20,7 @@ const LoggedInHeader = () => {
   const auth = getAuth();
   const { user } = state;
 
-  const logout = () => {
+  const logOut = () => {
     signOut(auth)
       .then(() => {
         dispatch({
@@ -157,7 +157,7 @@ const LoggedInHeader = () => {
                 leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-                  <div className="px-1 py-1 ">
+                  <div className="px-1 py-1">
                     {profileLinks.map((link, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (
@@ -177,7 +177,7 @@ const LoggedInHeader = () => {
                     ))}
                   </div>
 
-                  <div className="px-1 py-1 ">
+                  <div className="px-1 py-1">
                     {settinglinks.map((link, i) => (
                       <Menu.Item key={i}>
                         {({ active }) => (
@@ -197,11 +197,13 @@ const LoggedInHeader = () => {
                     ))}
                   </div>
 
-                  <div className="px-1 py-1 ">
+                  <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={logout}
+                          onClick={logOut}
+                          id="logout"
+                          title="logout"
                           className={`${
                             active
                               ? "bg-wokr-red-100 text-white"

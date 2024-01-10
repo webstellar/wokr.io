@@ -1,78 +1,73 @@
 export const typeDefs = `#graphql
-
-
-
   type AutomationImages {
     id: ID!
     url: String!
   }
-
-  type AutomationPlatform {
+  type AutomationTool {
     id: ID!
     title: String!
-    iconUrl: String!
+    image: String!
   }
-
   type Automation {
     id: ID!
     title: String!
     description: String!
+    featuredImage: String!
     video: String!
-    platforms: [AutomationPlatform!]!
+    tools: [AutomationTool!]!
     images: [AutomationImages!]!
   }
-
-  type Profile {
+  type User {
     id: ID!
+    username: String!
     name: String!
     email: String!
     profilePicture: String!
   }
 
-  type Query {
-    totalAutomations: Int!
-    totalProfiles: Int!
-    allAutomations: [Automation]
-    allProfiles: [Profile]
-    singleAutomation(id: ID!): Automation
-    singleProfile(id: ID!): Profile
-    me: String!
-  }
 
-  #mutations
-  type Mutation {
-    newAutomation(
-     automation: AddAutomationInput!
-    ): Automation
-    newProfile(
-      profile: AddProfileInput!
-    ): Profile
-  }
-
+  #inputs
   input AddAutomationInput {
     title: String!
     description: String!
     video: String!
-    platforms: [AddAutomationPlatformInput!]
+    tools: [AddAutomationToolInput!]
     images: [AddAutomationImageInput!]
-  }
-
-  input AddProfileInput {
+  }  
+  input AddUserInput {
+    username: String!
     name: String!
     email: String!
     profilePicture: String!
   }
-
-
-  input AddAutomationPlatformInput {
+  input AddAutomationToolInput {
     id: ID!
     title: String!
-    iconUrl: String!
+    image: String!
   }
-
   input AddAutomationImageInput {
     id: ID!
     url: String!
+  }
+
+
+  #queries
+  type Query {
+    totalAutomations: Int!
+    singleAutomation(id: ID!): Automation
+    allAutomations: [Automation]
+    totalUsers: Int!
+    allUsers: [User]
+    createUser: User 
+    singleUser(id: ID!): User
+    me: String!
+  }
+
+
+  #mutations
+  type Mutation {
+    newAutomation: Automation
+    createUser: User
   }
 `;
 
