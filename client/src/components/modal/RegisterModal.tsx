@@ -1,10 +1,11 @@
-import { Fragment, useRef, useState, useContext } from "react";
+import { Fragment, useRef, useState, useContext, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   signInWithPopup,
   GoogleAuthProvider,
   sendSignInLinkToEmail,
+  getIdToken,
 } from "firebase/auth";
 import {
   auth,
@@ -13,6 +14,8 @@ import {
 } from "../../config/firebase.js";
 import { AuthContext } from "../../context/authContext.js";
 import { toast } from "react-toastify";
+import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
+import { useMutation } from "@apollo/client";
 
 type ModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,15 +27,25 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
   const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userUpdated, setUserUpdated] = useState(false);
   const cancelButtonRef = useRef(null);
+  const [createUser] = useMutation(useNewProfileMutation, {});
 
-  const handleNext = () => {
+  useEffect(() => {
+    if (userUpdated) {
+      createUser();
+      setUserUpdated(false); // Reset the flag
+    }
+  }, [userUpdated, createUser]);
+
+  const handleNext = async () => {
     navigate("/setup-profile");
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
         window.localStorage.setItem("emailForSignIn", email);
@@ -61,27 +74,17 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
   };
 
   const onGoogleLogin = () => {
-    setLoading(true);
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential!.idToken;
+      .then(async (result) => {
         const user = result.user;
+        const idTokenResult = await getIdToken(user);
 
         dispatch({
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: String(idTokenResult) },
         });
 
-        setLoading(false);
-        toast("Account created successfully", {
-          hideProgressBar: true,
-          autoClose: 2000,
-          type: "success",
-        });
-
-        window.localStorage.setItem("emailForRegistration", user.email!);
-
+        setUserUpdated(true);
         handleNext();
       })
       .catch((error) => {

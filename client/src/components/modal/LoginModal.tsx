@@ -5,9 +5,9 @@ import { AuthContext } from "../../context/authContext.js";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
   getIdToken,
 } from "firebase/auth";
+
 import { auth, googleProvider } from "../../config/firebase.js";
 import { toast } from "react-toastify";
 
@@ -31,7 +31,9 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
+
         const idTokenResult = await getIdToken(user);
+
         dispatch({
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: idTokenResult },
@@ -56,10 +58,10 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
 
   const onGoogleLogin = () => {
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        console.log(result);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential?.idToken;
+      .then(async (result) => {
+        //const credential = GoogleAuthProvider.credentialFromResult(result);
+        //const idTokenResult = credential?.idToken;
+        const idTokenResult = await getIdToken(result.user);
         const user = result.user;
 
         dispatch({
@@ -76,7 +78,6 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
         setTimeout(function () {
           navigate("/post-a-job");
         }, 2000);
-        console.log(user, idTokenResult);
       })
       .catch((error) => {
         //const errorCode = error.code;

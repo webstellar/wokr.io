@@ -6,6 +6,14 @@ import yippity from "../assets/yippity.png";
 import processFace from "../assets/process_face.png";
 import processPost from "../assets/process_post.png";
 import processShare from "../assets/process_share.png";
+import dashboard from "../assets/dashboard.svg";
+import contacts from "../assets/contacts.svg";
+import analytics from "../assets/analytics.svg";
+import earnings from "../assets/earnings.svg";
+import services from "../assets/services.svg";
+import setting from "../assets/settings.svg";
+import orders from "../assets/orders.svg";
+import { NavItem } from "../types/Types";
 
 export const offerings = [
   {
@@ -227,4 +235,65 @@ export const automationLevels = [
   { value: "beginner", label: "Beginner" },
   { value: "intermediate", label: "Intermediate" },
   { value: "proficient", label: "Proficient" },
+];
+
+export const sidebarNavItems: NavItem[] = [
+  {
+    label: "Dashboard",
+    href: "/setup-profile",
+    icon: dashboard,
+  },
+  {
+    label: "Orders",
+    href: "/my-orders",
+    icon: orders,
+  },
+  {
+    label: "Jobs",
+    href: "/my-jobs",
+    icon: services,
+  },
+  {
+    label: "Analytics",
+    href: "/my-analytics",
+    icon: analytics,
+  },
+  {
+    label: "Earnings",
+    href: "/my-earnings",
+    icon: earnings,
+  },
+  {
+    label: "Contacts",
+    href: "/my-contacts",
+    icon: contacts,
+  },
+  {
+    label: "Setting",
+    href: "/setup-profile",
+    icon: setting,
+  },
+];
+
+export const feeTypes = [
+  {
+    id: 1,
+    label: "One-time",
+    value: "one-time",
+  },
+  {
+    id: 3,
+    value: "Fixed Price",
+    label: "Fixed Price",
+  },
+  {
+    id: 2,
+    value: "Subscription",
+    label: "Subscription",
+  },
+  {
+    id: 3,
+    value: "Pay-As-You-Go",
+    label: "Pay-As-You-Go",
+  },
 ];

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase.js";
 import { AuthContext } from "../../context/authContext.js";
 import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
+import { useUpdateProfileMutation } from "../../hooks/useUpdateProfileMutation.js";
 import { useMutation } from "@apollo/client";
 
 import {
@@ -23,13 +24,18 @@ const CompleteRegistration = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userUpdated, setUserUpdated] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-
   const [createUser] = useMutation(useNewProfileMutation, {});
+  const [updateUser] = useMutation(useUpdateProfileMutation, {});
 
   useEffect(() => {
-    setEmail(window.localStorage.getItem("emailForSignIn")!); // Use non-null assertion operator
-  }, [navigate]);
+    setEmail(window.localStorage.getItem("emailForSignIn")!);
+    if (userUpdated) {
+      createUser();
+      setUserUpdated(false); // Reset the flag
+    }
+  }, [navigate, userUpdated, createUser]);
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -76,22 +82,24 @@ const CompleteRegistration = () => {
             })
             .catch((error) => {
               console.error(error);
+              console.log("It happened here!");
             });
 
           //dispatch user with token and email
           //then redirect
           const idTokenResult = await getIdToken(result.user);
+
           dispatch({
             type: "LOGGED_IN_USER",
             payload: { email: String(user.email), token: idTokenResult },
           });
 
-          const graphqlUser = await createUser({
-            variables: { email: user.email, username: "Peter" },
-          });
+          /*      await createUser({
+            variables: { input: { email: user.email, username: "Peter" } },
+          }); */
 
-          console.log("newProile ", graphqlUser);
-
+          //await createUser();
+          setUserUpdated(true);
           handleNext();
         })
         .catch((error) => {
@@ -107,8 +115,24 @@ const CompleteRegistration = () => {
     }
   };
 
-  const onHandleSubmit = () => {
-    //navigate("/setup-profile");
+  const onHandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!username) {
+      toast("Please provide a unique username", {
+        hideProgressBar: true,
+        autoClose: 2000,
+        type: "error",
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+
+    //need fixing, no update occurs here
+    await updateUser({
+      variables: { input: { username: username } },
+    });
+
     handleNext();
   };
 

@@ -4,7 +4,6 @@ import { AuthContext } from "../../context/authContext.js";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
   getIdToken,
 } from "firebase/auth";
 import { auth, googleProvider } from "../../config/firebase.js";
@@ -49,11 +48,10 @@ const Login = () => {
 
   const onGoogleLogin = () => {
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
+      .then(async (result) => {
         console.log(result);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential?.idToken;
         const user = result.user;
+        const idTokenResult = await getIdToken(user);
 
         dispatch({
           type: "LOGGED_IN_USER",

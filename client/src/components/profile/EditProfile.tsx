@@ -9,6 +9,8 @@ import {
 } from "../../data/data";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import { verifyCaptchaAction } from "../../utils/verify";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
@@ -37,7 +39,9 @@ const EditProfile = () => {
   const [skillLevel, setSkillLevel] = useState("EXPERIENCE LEVEL");
   const [automation, setAutomation] = useState("");
   const [automationLevel, setAutomationLevel] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
+  const [valid, setValid] = useState(true);
 
   const handleChange = (
     e:
@@ -49,6 +53,16 @@ const EditProfile = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+  const handlePhoneChange = (value: string) => {
+    setPhoneNumber(value);
+    setValid(validatePhoneNumber(value));
+  };
+
+  const validatePhoneNumber = (phoneNumber: string) => {
+    const phoneNumberPattern = /^\d{13}$/; // Validates a 10-digit phone number
+    return phoneNumberPattern.test(phoneNumber);
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,7 +103,7 @@ const EditProfile = () => {
                 Display Name
               </label>
               <input
-                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 outline-wokr-red-100"
                 id="displayName"
                 name="displayName"
                 type="text"
@@ -107,7 +121,7 @@ const EditProfile = () => {
                 Email
               </label>
               <input
-                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 outline-wokr-red-100"
                 id="email"
                 type="email"
                 name="email"
@@ -120,19 +134,42 @@ const EditProfile = () => {
 
           <div className="mb-8 w-full grid grid-cols-2 justify-around items-center gap-x-2">
             <div></div>
+            <div className="">
+              <label
+                className="block text-grey-darker text-sm font-bold mb-2"
+                htmlFor="PhoneNumber"
+              >
+                Phone
+              </label>
+              <div className="relative w-full flex flex-col">
+                <PhoneInput
+                  country={"us"}
+                  value={phoneNumber}
+                  inputStyle={{ width: "100%" }}
+                  containerClass="focus:border-wokr-red-100"
+                  inputClass="font-pangram-medium focus:border-wokr-red-100"
+                  dropdownClass="font-pangram-medium focus:border-wokr-red-100"
+                  onChange={handlePhoneChange}
+                  inputProps={{
+                    required: true,
+                    name: "phoneNumber",
+                  }}
+                />
 
-            <div>Input</div>
+                {!valid && <p>Please enter a valid phone number.</p>}
+              </div>
+            </div>
           </div>
 
           <div className="mb-4">
             <label
-              className="block text-grey-darker text-sm font-bold mb-2"
+              className="block text-grey-darker text-sm font-bold mb-2 "
               htmlFor="description"
             >
               Description
             </label>
             <textarea
-              className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500"
+              className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 outline-wokr-red-100"
               name="description"
               id="description"
               rows={10}
@@ -275,15 +312,15 @@ const EditProfile = () => {
               {`${automation} - ${automationLevel}`}
             </p>
           </div>
-          <div className="mb-8">
+          <div className="mb-8 flex flex-col gap-y-7">
             <label
-              className="block text-grey-darker text-sm font-bold mb-2"
+              className="block text-grey-darker text-sm font-bold"
               htmlFor="education"
             >
               Education
             </label>
             <input
-              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full mb-4"
+              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full"
               id="universityCountry"
               name="universityCountry"
               type="text"
@@ -292,7 +329,7 @@ const EditProfile = () => {
               value={state.universityCountry}
             />
             <input
-              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full mb-4"
+              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full"
               id="universityCollege"
               type="text"
               name="universityCollege"
@@ -300,7 +337,7 @@ const EditProfile = () => {
               onChange={handleChange}
               value={state.universityCollege}
             />
-            <div className="grid grid-cols-2 justify-around items-center w-full gap-x-2 mb-4">
+            <div className="grid grid-cols-2 justify-around items-center w-full gap-x-2">
               <input
                 className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full"
                 id="educationTitle"
@@ -322,7 +359,7 @@ const EditProfile = () => {
               />
             </div>
             <input
-              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full mb-4"
+              className="block rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 w-full"
               id="graduationYear"
               type="text"
               placeholder="YEAR OF GRADUATION"
@@ -339,7 +376,7 @@ const EditProfile = () => {
           {/* Add more form fields as necessary */}
           <div className="flex items-center justify-between">
             <button
-              className="bg-red-500 hover:bg-wokr-red-200 text-white font-bold py-3 px-4 rounded w-1/4"
+              className="bg-wokr-red-200 hover:bg-wokr-red-200 text-white font-bold py-3 px-4 rounded w-1/4"
               type="button"
             >
               {loading ? (

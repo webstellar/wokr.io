@@ -1,6 +1,9 @@
 import { automations } from "../../temp.js";
 import { authCheck } from "../../helpers/auth.js";
 
+//models
+import { Automation } from "../../models/automation.js";
+
 const totalAutomations = () => automations.length;
 
 const allAutomations = async (_, args, { req }) => {
@@ -8,12 +11,12 @@ const allAutomations = async (_, args, { req }) => {
   return automations;
 };
 
-const newAutomation = (_, args) => {
-  let automation = {
-    ...args.automation,
-    id: automations.length + 1,
-  };
-  automations.push(automation);
+const createAutomation = async (_, args, { req }) => {
+  let automationResult = args?.input.automations;
+  const currentUser = await authCheck(req);
+
+  const automation = await Automation.findOne({});
+
   return automation;
 };
 
@@ -30,7 +33,7 @@ const automationResolvers = {
   },
 
   Mutation: {
-    newAutomation,
+    createAutomation,
   },
 };
 

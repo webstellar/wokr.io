@@ -1,13 +1,13 @@
 import { Fragment } from "react";
-import Layout from "../../components/layout/Layout";
+import LoggedInLayout from "../../components/layout/LoggedInLayout";
 import EditProfile from "../../components/profile/EditProfile";
 
 const SetupProfile = () => {
   return (
     <Fragment>
-      <Layout>
+      <LoggedInLayout>
         <EditProfile />
-      </Layout>
+      </LoggedInLayout>
     </Fragment>
   );
 };

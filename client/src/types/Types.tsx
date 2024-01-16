@@ -10,3 +10,9 @@ export type ProcessBlurb = {
   description: string;
   icon: string;
 };
+
+export type NavItem = {
+  label: string;
+  href: string;
+  icon: string;
+};

@@ -9,8 +9,6 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./pages/sellerDashboard/SetupProfile";
 import PostJob from "./pages/sellerDashboard/PostJob";
-import GraphqlPlayground from "./pages/testing/GraphqlPlayground";
-
 import CompleteRegistration from "./pages/auth/CompleteRegistration";
 
 const App: React.FC = () => {
@@ -36,7 +34,6 @@ const App: React.FC = () => {
           path="/complete-registration"
           element={<CompleteRegistration />}
         />
-        <Route path="/graphql" element={<GraphqlPlayground />} />
         <Route path="/setup-profile" element={<Profile />} />
         <Route path="/post-a-job" element={<PostJob />} />
       </Routes>

@@ -21,6 +21,7 @@
     "graphql": "^16.8.1",
     "mongoose": "^7.6.1",
     "nodemon": "^3.0.1",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "unique-username-generator": "^1.2.0"
   }
 }

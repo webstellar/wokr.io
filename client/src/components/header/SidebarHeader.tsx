@@ -1,20 +1,22 @@
 import { useState, FormEvent, Fragment, useContext } from "react";
-import { Dialog, Popover, Menu, Transition } from "@headlessui/react";
+import { Popover, Menu, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { AuthContext } from "../../context/authContext";
 import {
   HiMenuAlt1,
-  HiOutlineX,
   HiOutlineBell,
   HiOutlineChevronDown,
 } from "react-icons/hi";
-import logo from "../../assets/wokri_logo.png";
 
 //data
 import { homeMenu, profileLinks, settinglinks } from "../../data/data";
 
-const LoggedInHeader = () => {
+type Props = {
+  onMenuButtonClick(): void;
+};
+
+const SidebarHeader = (props: Props) => {
   const { state, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -34,7 +36,6 @@ const LoggedInHeader = () => {
       });
   };
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState([]);
 
@@ -63,25 +64,14 @@ const LoggedInHeader = () => {
       } bg-transparent w-full`}
     >
       <nav
-        className="mx-auto flex max-w-screen-2xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-screen-2xl items-center justify-end md:justify-between p-6 lg:px-8"
         aria-label="Global"
       >
-        <div className="flex">
-          <Link to="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Wokr Marketplace</span>
-            <img
-              className="h-14 w-auto"
-              src={logo}
-              alt="wokr marketplace logo"
-            />
-          </Link>
-        </div>
-
         <div className="flex lg:hidden">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={props.onMenuButtonClick}
           >
             <span className="sr-only">Open main menu</span>
             <HiMenuAlt1 className="h-6 w-6" aria-hidden="true" />
@@ -94,7 +84,7 @@ const LoggedInHeader = () => {
               <input
                 type="search"
                 name="domain"
-                className="w-full md:w-[500px] backdrop-blur-sm bg-gray-200 py-2 pl-10 pr-4 rounded-full focus:outline-none border-2 border-white focus:border-wokr-red-100/5 transition-colors duration-300"
+                className="w-full md:w-[700px] backdrop-blur-sm bg-gray-200 py-2 pl-10 pr-4 rounded-full focus:outline-none border-2 border-white focus:border-wokr-red-100/5 transition-colors duration-300"
                 placeholder="Search"
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -119,16 +109,6 @@ const LoggedInHeader = () => {
         </div>
 
         <Popover.Group className="hidden lg:flex lg:gap-x-6 justify-center items-center">
-          {homeMenu.map((item) => (
-            <Link
-              key={item.id}
-              to={item.url}
-              className="text-base font-normal leading-6 text-gray-900"
-            >
-              {item.title}
-            </Link>
-          ))}
-
           <HiOutlineBell className="text-2xl text-gray-500" />
 
           {user && (
@@ -222,52 +202,7 @@ const LoggedInHeader = () => {
       </nav>
 
       {/* Create an Account */}
-
-      {/* MOBILE MENU*/}
-      <Dialog
-        as="div"
-        className="lg:hidden"
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
-      >
-        <div className="fixed inset-0 z-10" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Wokr Marketplace</span>
-              <img
-                className="h-12 w-auto"
-                src={logo}
-                alt="wokr marketplace logo"
-              />
-            </Link>
-            <button
-              type="button"
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="sr-only">Close menu</span>
-              <HiOutlineX className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {homeMenu.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.url}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-normal leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    {item.title}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Dialog.Panel>
-      </Dialog>
     </header>
   );
 };
-export default LoggedInHeader;
+export default SidebarHeader;

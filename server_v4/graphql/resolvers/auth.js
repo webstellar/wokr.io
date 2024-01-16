@@ -1,11 +1,13 @@
 import { profiles } from "../../temp.js";
 import { authCheck } from "../../helpers/auth.js";
-import shortid from "shortid";
+import { generateFromEmail } from "unique-username-generator";
 
 //models
 import { User } from "../../models/user.js";
 
 const createUser = async (_, args, { req }) => {
+  //console.log(args.input.username);
+  //console.log("HEADERS HERE ", req.headers);
   const currentUser = await authCheck(req);
   const user = await User.findOne({ email: currentUser.email });
 
@@ -13,13 +15,22 @@ const createUser = async (_, args, { req }) => {
     ? user
     : new User({
         email: currentUser.email,
-        username: shortid.generate(), //temporary
+        username: generateFromEmail(currentUser.email, 4), //temporary
       }).save();
 };
 
-const me = async (_, args, { req }) => {
-  await authCheck(req);
-  return "Peter";
+const updateUser = async (_, args, { req }) => {
+  const currentUser = await authCheck(req);
+  let user = await User.findOneAndUpdate(
+    { email: currentUser.email },
+    { username: args?.input?.username },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  return user;
 };
 
 const totalUsers = () => profiles.length;
@@ -31,15 +42,14 @@ const singleUser = (_, args) => {
 //the main deal
 const userResolvers = {
   Query: {
-    createUser,
     singleUser,
     totalUsers,
     allUsers,
-    me,
   },
 
   Mutation: {
     createUser,
+    updateUser,
   },
 };
 

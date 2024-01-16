@@ -35,10 +35,8 @@ export const typeDefs = `#graphql
     images: [AddAutomationImageInput!]
   }  
   input AddUserInput {
-    username: String!
-    name: String!
-    email: String!
-    profilePicture: String!
+    username: String
+    email: String
   }
   input AddAutomationToolInput {
     id: ID!
@@ -49,6 +47,9 @@ export const typeDefs = `#graphql
     id: ID!
     url: String!
   }
+  input UpdateUserInput {
+    username: String
+  }
 
 
   #queries
@@ -58,16 +59,15 @@ export const typeDefs = `#graphql
     allAutomations: [Automation]
     totalUsers: Int!
     allUsers: [User]
-    createUser: User 
     singleUser(id: ID!): User
-    me: String!
   }
 
 
   #mutations
   type Mutation {
-    newAutomation: Automation
+    createAutomation(input: AddAutomationInput!): Automation
     createUser: User
+    updateUser(input: UpdateUserInput): User
   }
 `;
 

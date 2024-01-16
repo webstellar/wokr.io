@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -18,7 +22,12 @@ export default {
         "pangram-extrabold": ["Pangram-ExtraBold"],
         "pangram-black": ["Pangram-Black"],
       },
+      gridTemplateColumns: {
+        sidebar: "300px auto", //for sidebar layout
+        "sidebar-collapsed": "64px auto", //for collapsed sidebar layout
+      },
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
+  /*eslint-env node*/
 };

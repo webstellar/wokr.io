@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 //import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -10,6 +11,7 @@ const firebaseConfig = {
   //messagingSenderId: "189580592206",
   appId: "1:189580592206:web:5df7e969d662fde3976f1f",
   measurementId: "G-1P3V15SXE8",
+  type: "service_account",
 };
 
 // Initialize Firebase
@@ -22,5 +24,6 @@ export const actionCodeSettings = {
 };
 
 export const auth = getAuth(app);
+export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
 export default app;

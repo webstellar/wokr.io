@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   signInWithPopup,
   GoogleAuthProvider,
   sendSignInLinkToEmail,
+  getIdToken,
 } from "firebase/auth";
 
 import {
@@ -13,12 +14,24 @@ import {
 } from "../../config/firebase.js";
 import { AuthContext } from "../../context/authContext.js";
 import { toast } from "react-toastify";
+import { useMutation } from "@apollo/client";
+
+import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
 
 const Register = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userUpdated, setUserUpdated] = useState(false);
+  const [createUser] = useMutation(useNewProfileMutation, {});
+
+  useEffect(() => {
+    if (userUpdated) {
+      createUser();
+      setUserUpdated(false); // Reset the flag
+    }
+  }, [userUpdated, createUser]);
 
   const handleNext = () => {
     navigate("/setup-profile");
@@ -55,29 +68,17 @@ const Register = () => {
   };
 
   const onGoogleLogin = () => {
-    setLoading(true);
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idTokenResult = credential!.idToken;
+      .then(async (result) => {
         const user = result.user;
+        const idTokenResult = await getIdToken(user);
 
         dispatch({
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: String(idTokenResult) },
         });
-        setLoading(false);
-        toast("Account created successfully", {
-          hideProgressBar: true,
-          autoClose: 2000,
-          type: "success",
-        });
-
-        window.localStorage.setItem("emailForRegistration", user.email!);
-
+        setUserUpdated(true);
         handleNext();
-        console.log(user);
-        console.log("it works");
       })
       .catch((error) => {
         const errorCode = error.code;

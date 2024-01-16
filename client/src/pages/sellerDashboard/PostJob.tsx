@@ -1,9 +1,12 @@
-import Layout from "../../components/layout/Layout";
+import LoggedInLayout from "../../components/layout/LoggedInLayout";
+import AddJob from "../../components/job/AddJob";
 
 const PostJob = () => {
   return (
     <div>
-      <Layout>PostJob</Layout>
+      <LoggedInLayout>
+        <AddJob />
+      </LoggedInLayout>
     </div>
   );
 };

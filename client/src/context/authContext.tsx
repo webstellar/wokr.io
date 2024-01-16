@@ -55,10 +55,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log(user);
         const idTokenResult = await getIdTokenResult(user);
         dispatch({
           type: "LOGGED_IN_USER",
-          payload: { email: String(user.email), token: idTokenResult.token }, // Access the 'token' property
+          payload: {
+            email: String(user.email),
+            token: idTokenResult.token,
+          }, // Access the 'token' property
         });
       } else {
         dispatch({
