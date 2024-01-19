@@ -40,6 +40,7 @@ const EditProfile = () => {
   const [automation, setAutomation] = useState("");
   const [automationLevel, setAutomationLevel] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(true);
 
@@ -107,7 +108,7 @@ const EditProfile = () => {
                 id="displayName"
                 name="displayName"
                 type="text"
-                placeholder="JOHN_WICK"
+                placeholder="john_wick"
                 onChange={handleChange}
                 value={state.displayName}
               />
@@ -133,7 +134,26 @@ const EditProfile = () => {
           </div>
 
           <div className="mb-8 w-full grid grid-cols-2 justify-around items-center gap-x-2">
-            <div></div>
+            <div>
+              <label
+                className="block text-grey-darker text-sm font-bold mb-2 "
+                htmlFor="description"
+              >
+                Upload Image
+              </label>
+
+              <input
+                title="profileImage"
+                name="profileImage"
+                id="profileImage"
+                type="file"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (e.target.files != null) {
+                    setProfileImage(e.target.files[0]);
+                  }
+                }}
+              />
+            </div>
             <div className="">
               <label
                 className="block text-grey-darker text-sm font-bold mb-2"

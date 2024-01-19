@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, useContext } from "react";
+import { Fragment, useRef, useState, useContext, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext.js";
@@ -10,6 +10,8 @@ import {
 
 import { auth, googleProvider } from "../../config/firebase.js";
 import { toast } from "react-toastify";
+import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
+import { useMutation } from "@apollo/client";
 
 type ModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +24,15 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userUpdated, setUserUpdated] = useState(false);
+  const [createUser] = useMutation(useNewProfileMutation, {});
+
+  useEffect(() => {
+    if (userUpdated) {
+      createUser();
+      setUserUpdated(false); // Reset the flag
+    }
+  }, [userUpdated, createUser]);
 
   const cancelButtonRef = useRef(null);
 
@@ -38,6 +49,8 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: idTokenResult },
         });
+
+        setUserUpdated(true);
 
         setLoading(false);
         toast("Logged in successfully", {
@@ -68,6 +81,8 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: String(idTokenResult) },
         });
+
+        setUserUpdated(true);
 
         toast("Logged in successfully", {
           hideProgressBar: true,

@@ -5,13 +5,14 @@ import { verifyCaptchaAction } from "../../utils/verify";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useNavigate } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
-import { HiChevronDown } from "react-icons/hi";
+import { HiChevronDown, HiOutlinePlus } from "react-icons/hi";
 import {
   skillLevels,
   skills,
   automationTools,
   automationLevels,
   feeTypes,
+  deliveryTimes,
 } from "../../data/data.js";
 
 type valueProps = {
@@ -35,7 +36,9 @@ const AddJob = () => {
   const [automation, setAutomation] = useState("ADD AUTOMATION TOOL");
   const [automationLevel, setAutomationLevel] = useState("EXPERIENCE LEVEL");
   const [feeType, setFeeType] = useState("FIXED PRICE");
+  const [deliveryTime, setDeliveryTime] = useState("1 day");
   const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [videoUpload, setVideoUpload] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
@@ -53,7 +56,7 @@ const AddJob = () => {
   return (
     <section className="mx-auto">
       <form>
-        <div className="grid grid-cols-3 justify-between items-start gap-10 max-w-screen-2xl px-6 lg:px-8">
+        <div className="mx-auto grid grid-cols-3 justify-between items-start gap-10 max-w-screen-2xl px-6 lg:px-8">
           <div className="col-span-2 w-full">
             <div className="mb-8">
               <label
@@ -178,31 +181,84 @@ const AddJob = () => {
                 value={state.description}
               />
             </div>
+            <div className="mb-8">
+              <label
+                className="block text-grey-darker text-sm font-bold mb-2"
+                htmlFor="automationTools"
+              >
+                Max Revisions
+              </label>
+
+              <div className="grid grid-cols-2 justify-around items-center w-full gap-x-2 mb-2">
+                <input
+                  className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
+                  id="maxRevisions"
+                  name="maxRevisions"
+                  type="number"
+                  placeholder="0"
+                  onChange={handleChange}
+                  value={state.maxRevisions}
+                />
+              </div>
+            </div>
 
             <div className="mb-8">
               <label
-                className="block text-grey-darker text-sm font-bold mb-2 "
-                htmlFor="description"
+                className="block text-grey-darker text-sm font-bold mb-2"
+                htmlFor="automationTools"
               >
-                Upload Image
+                Delivery Time
               </label>
 
-              <input
-                title="images"
-                name="images"
-                id="images"
-                type="file"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (e.target.files != null) {
-                    setImageUpload(e.target.files[0]);
-                  }
-                }}
-              />
+              <div className="grid grid-cols-2 justify-around items-center w-full gap-x-2 mb-2">
+                <select
+                  required
+                  title="deliveryTime"
+                  name="deliveryTime"
+                  className="text-black bg-white px-3 py-2 transition-all cursor-pointer hover:border-wokr-red-100 border border-gray-200 rounded-lg outline-wokr-red-100 appearance-none invalid:text-black/30"
+                  onChange={(e) => setDeliveryTime(e.target.value)}
+                  value={deliveryTime}
+                >
+                  {deliveryTimes.map((time) => (
+                    <option key={time.id} value={time.value}>
+                      {time.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <div>
+                <p className="text-grey-darker text-sm font-bold mb-2 ">
+                  Upload Image
+                </p>
+                <label
+                  className="inline-block text-grey-darker text-sm font-bold mb-2 border-2 p-20 rounded-lg backdrop-blur-0 bg-gray-100 cursor-pointer"
+                  htmlFor="images"
+                >
+                  <HiOutlinePlus className="text-4xl font-extralight" />
+                </label>
+
+                <input
+                  className="hidden"
+                  title="images"
+                  name="images"
+                  id="images"
+                  type="file"
+                  accept="image/png, image/jpeg, image/webp, image/jpg"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (e.target.files != null) {
+                      setImageUpload(e.target.files[0]);
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
 
           <div>
-            <div className="mb-8">
+            <div className="mb-8 w-full">
               <label
                 className="block text-grey-darker text-sm font-bold mb-2"
                 htmlFor="skills"
@@ -211,9 +267,9 @@ const AddJob = () => {
               </label>
               <select
                 required
-                title="skillLevel"
-                name="skillLevel"
-                className="text-black bg-white px-3 py-2 transition-all cursor-pointer hover:border-wokr-red-100 border border-gray-200 rounded-lg outline-wokr-red-100 appearance-none invalid:text-black/30 w-1/2"
+                title="feeType"
+                name="feeType"
+                className="text-black bg-white px-3 py-2 transition-all cursor-pointer hover:border-wokr-red-100 border border-gray-200 rounded-lg outline-wokr-red-100 appearance-none invalid:text-black/30 w-full"
                 onChange={(e) => setFeeType(e.target.value)}
                 value={feeType}
               >
@@ -225,7 +281,7 @@ const AddJob = () => {
               </select>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 w-full">
               <label
                 className="block text-grey-darker text-sm font-bold mb-2.5 uppercase"
                 htmlFor="display-name"
@@ -233,7 +289,7 @@ const AddJob = () => {
                 Price (staring at)
               </label>
               <input
-                className="block w-1/2 rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
                 id="price"
                 name="price"
                 type="text"
@@ -243,7 +299,29 @@ const AddJob = () => {
               />
             </div>
 
-            <div className="mb-8 flex justify-between items-center gap-x-5 w-1/2">
+            <div className="mb-8">
+              <label
+                className="block text-grey-darker text-sm font-bold mb-2 "
+                htmlFor="video"
+              >
+                Upload Video
+              </label>
+
+              <input
+                title="video"
+                name="video"
+                id="video"
+                type="file"
+                accept="video/*"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (e.target.files != null) {
+                    setVideoUpload(e.target.files[0]);
+                  }
+                }}
+              />
+            </div>
+
+            <div className="mb-8 flex justify-between items-center gap-x-5 w-full">
               Cancel
               <Menu as="div" className="relative inline-block text-left">
                 <div>

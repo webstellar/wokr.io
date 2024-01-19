@@ -297,3 +297,27 @@ export const feeTypes = [
     label: "Pay-As-You-Go",
   },
 ];
+
+export const deliveryTimes = [
+  { id: 1, label: "1 day", value: "1" },
+  { id: 2, label: "2 days", value: "2" },
+  { id: 3, label: "3 days", value: "3" },
+  { id: 4, label: "4 days", value: "4" },
+  { id: 5, label: "5 days", value: "5" },
+  { id: 6, label: "6 days", value: "6" },
+  { id: 7, label: "7 days", value: "7" },
+  { id: 8, label: "8 days", value: "8" },
+  { id: 9, label: "9 days", value: "9" },
+  { id: 10, label: "10 days", value: "10" },
+  { id: 11, label: "11 days", value: "11" },
+  { id: 12, label: "12 days", value: "12" },
+  { id: 13, label: "13 days", value: "13" },
+  { id: 14, label: "14 days", value: "14" },
+  { id: 15, label: "15 days", value: "15" },
+  { id: 16, label: "16 days", value: "16" },
+  { id: 17, label: "17 days", value: "17" },
+  { id: 18, label: "18 days", value: "18" },
+  { id: 19, label: "19 days", value: "19" },
+  { id: 20, label: "20 days", value: "20" },
+  { id: 21, label: "21 days", value: "21" },
+];
