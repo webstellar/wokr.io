@@ -1,9 +1,8 @@
 import { useState, Fragment } from "react";
 import { storage } from "../../config/firebase.js";
-import { ref, getDownloadURL } from "firebase/storage";
-import { verifyCaptchaAction } from "../../utils/verify";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { useNavigate } from "react-router-dom";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { toast } from "react-toastify";
+import { v4 } from "uuid";
 import { Menu, Transition } from "@headlessui/react";
 import { HiChevronDown, HiOutlinePlus } from "react-icons/hi";
 import {
@@ -14,6 +13,7 @@ import {
   feeTypes,
   deliveryTimes,
 } from "../../data/data.js";
+import { useNavigate } from "react-router-dom";
 
 type valueProps = {
   [key: string]: string;
@@ -23,13 +23,11 @@ const initState: valueProps = {
   title: "",
   description: "",
   price: "",
-  deliveryTime: "",
   maxRevisions: "",
 };
 
 const AddJob = () => {
   const navigate = useNavigate();
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [state, setState] = useState(initState);
   const [skill, setSkill] = useState("ADD SKILL");
   const [skillLevel, setSkillLevel] = useState("EXPERIENCE LEVEL");
@@ -39,6 +37,7 @@ const AddJob = () => {
   const [deliveryTime, setDeliveryTime] = useState("1 day");
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [videoUpload, setVideoUpload] = useState<File | null>(null);
+  const [entries, setEntries] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
@@ -51,11 +50,64 @@ const AddJob = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    setEntries(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (imageUpload == null) return;
+
+    try {
+      const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+      const videoRef = ref(storage, `videos/${videoUpload?.name + v4()}`);
+
+      // Upload image to firebase
+      await uploadBytes(imageRef, imageUpload);
+
+      // Upload video to firebase if videoUpload is not null
+      if (videoUpload) {
+        await uploadBytes(videoRef, videoUpload);
+      }
+
+      // Get download URLs
+      const imageUrl = await getDownloadURL(imageRef);
+      const videoUrl = videoUpload ? await getDownloadURL(videoRef) : null;
+
+      const formData = {
+        title: state.title,
+        description: state.description,
+        price: state.price,
+        deliveryTime: deliveryTime,
+        maxRevisions: state.maxRevisions,
+        video: videoUrl,
+        image: imageUrl,
+        fee: feeType,
+        skill: skill,
+        skillLevel: skillLevel,
+        automation: automation,
+        automationLevel: automationLevel,
+      };
+
+      console.log(formData);
+      toast("", {
+        hideProgressBar: true,
+        autoClose: 2000,
+        type: "success",
+      });
+      navigate("/profile");
+
+      // Continue with the rest of your code...
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <section className="mx-auto">
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mx-auto grid grid-cols-3 justify-between items-start gap-10 max-w-screen-2xl px-6 lg:px-8">
           <div className="col-span-2 w-full">
             <div className="mb-8">
@@ -66,7 +118,7 @@ const AddJob = () => {
                 Title
               </label>
               <input
-                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-500 outline-wokr-red-100"
                 id="title"
                 name="title"
                 type="text"
@@ -172,7 +224,7 @@ const AddJob = () => {
                 Description
               </label>
               <textarea
-                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-200 outline-wokr-red-100"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-1 px-1.5 text-gray-500 outline-wokr-red-100"
                 name="description"
                 id="description"
                 rows={10}
@@ -191,7 +243,7 @@ const AddJob = () => {
 
               <div className="grid grid-cols-2 justify-around items-center w-full gap-x-2 mb-2">
                 <input
-                  className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
+                  className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-500 outline-wokr-red-100"
                   id="maxRevisions"
                   name="maxRevisions"
                   type="number"
@@ -273,8 +325,8 @@ const AddJob = () => {
                 onChange={(e) => setFeeType(e.target.value)}
                 value={feeType}
               >
-                {feeTypes.map((feeType) => (
-                  <option key={feeType.id} value={feeType.value}>
+                {feeTypes.map((feeType, i) => (
+                  <option key={i} value={feeType.value}>
                     {feeType.label}
                   </option>
                 ))}
@@ -289,7 +341,7 @@ const AddJob = () => {
                 Price (staring at)
               </label>
               <input
-                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-300 outline-wokr-red-100"
+                className="block w-full rounded-md border border-gray-300 focus:border-wokr-red-100 focus:outline-none focus:ring-1 focus:ring-wokr-red-100 py-2 px-3 text-gray-500 outline-wokr-red-100"
                 id="price"
                 name="price"
                 type="text"
@@ -325,8 +377,12 @@ const AddJob = () => {
               Cancel
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-                    Options
+                  <Menu.Button
+                    className={`${
+                      entries ? "bg-green-500" : "bg-black/20"
+                    }  inline-flex w-full justify-center rounded-md  px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75`}
+                  >
+                    Publish
                     <HiChevronDown
                       className="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
                       aria-hidden="true"
@@ -352,7 +408,33 @@ const AddJob = () => {
                             } group flex w-full rounded-md px-2 py-3 text-sm hover:text-white`}
                             type="submit"
                           >
-                            Publish
+                            {loading ? (
+                              <>
+                                <svg
+                                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M12 2C6.477 2 2 6.477 2 12c0 1.656.337 3.223 0.943 4.65C3.65 16.73 4.26 17 5 17c.74 0 1.35-.27 1.057-.35C7.663 15.223 8 13.656 8 12c0-2.21-.895-4.21-2.343-5.657C4.105 4.895 2.105 4 0 4"
+                                  ></path>
+                                </svg>
+                                Publishing...
+                              </>
+                            ) : (
+                              "Publish"
+                            )}
                           </button>
                         )}
                       </Menu.Item>
@@ -364,7 +446,33 @@ const AddJob = () => {
                             } group flex w-full rounded-md px-2 py-3 hover:text-white text-sm`}
                             type="submit"
                           >
-                            Save to Draft
+                            {loading ? (
+                              <>
+                                <svg
+                                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M12 2C6.477 2 2 6.477 2 12c0 1.656.337 3.223 0.943 4.65C3.65 16.73 4.26 17 5 17c.74 0 1.35-.27 1.057-.35C7.663 15.223 8 13.656 8 12c0-2.21-.895-4.21-2.343-5.657C4.105 4.895 2.105 4 0 4"
+                                  ></path>
+                                </svg>
+                                Saving to draft...
+                              </>
+                            ) : (
+                              "Save to draft"
+                            )}
                           </button>
                         )}
                       </Menu.Item>

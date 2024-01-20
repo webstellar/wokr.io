@@ -71,6 +71,11 @@ const automationSchema = new Schema(
       ref: "User",
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "draft",
+    },
     buyers: [
       {
         type: {

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import {
   languages,
   languageLevels,
@@ -8,11 +8,12 @@ import {
   automationLevels,
 } from "../../data/data";
 import { useNavigate } from "react-router-dom";
+import { storage } from "../../config/firebase.js";
+import { v4 } from "uuid";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { verifyCaptchaAction } from "../../utils/verify";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 type valueProps = {
   [key: string]: string;
@@ -31,7 +32,6 @@ const initState: valueProps = {
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [state, setState] = useState(initState);
   const [language, setLanguage] = useState("ADD LANGUAGE");
   const [languageLevel, setLanguageLevel] = useState("LANGUAGE LEVEL");
@@ -65,31 +65,47 @@ const EditProfile = () => {
     return phoneNumberPattern.test(phoneNumber);
   };
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-      setLoading(true);
-      const token = (await executeRecaptcha?.("profile_setup")) ?? ""; // Provide a default value of an empty string
-      const verified = await verifyCaptchaAction(token);
+    if (profileImage == null) return;
 
-      if (verified) {
-        try {
-          console.log(state);
-          toast("Thanks for setting up your profile", {
-            hideProgressBar: true,
-            autoClose: 2000,
-            type: "success",
-          });
-          navigate("/profile");
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
+    try {
+      const profileRef = ref(storage, `profiles/${profileImage.name + v4()}`);
+      await uploadBytes(profileRef, profileImage);
 
-    [executeRecaptcha, state, navigate]
-  );
+      // Get download URLs
+      const profileUrl = await getDownloadURL(profileRef);
+
+      const formData = {
+        displayName: state.displayName,
+        description: state.description,
+        universityCollege: state.universityCollege,
+        universityCountry: state.universityCountry,
+        educationTitle: state.educationTitle,
+        graduationYear: state.graduationYear,
+        profileImage: profileUrl,
+        skill: skill,
+        skillLevel: skillLevel,
+        automation: automation,
+        automationLevel: automationLevel,
+        language: language,
+        languageLevel: languageLevel,
+      };
+
+      console.log(formData);
+      toast("Thanks for setting up your profile", {
+        hideProgressBar: true,
+        autoClose: 2000,
+        type: "success",
+      });
+      navigate("/profile");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <section className="mx-auto">
       <div className="grid grid-cols-1 justify-start items-center mx-auto max-w-screen-2xl px-6 lg:px-8">

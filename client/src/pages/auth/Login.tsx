@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext.js";
 import {
@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "../../config/firebase.js";
 import { toast } from "react-toastify";
+import { useMutation } from "@apollo/client";
+import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +17,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userUpdated, setUserUpdated] = useState(false);
+  const [createUser] = useMutation(useNewProfileMutation, {});
+
+  useEffect(() => {
+    if (userUpdated) {
+      createUser();
+      setUserUpdated(false); // Reset the flag
+    }
+  }, [userUpdated, createUser]);
 
   const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +38,8 @@ const Login = () => {
           type: "LOGGED_IN_USER",
           payload: { email: String(user.email), token: idTokenResult },
         });
+
+        setUserUpdated(true);
 
         setLoading(false);
         toast("Logged in successfully", {
@@ -58,6 +71,7 @@ const Login = () => {
           payload: { email: String(user.email), token: String(idTokenResult) },
         });
 
+        setUserUpdated(true);
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
@@ -183,7 +197,7 @@ const Login = () => {
                                   d="M12 2C6.477 2 2 6.477 2 12c0 1.656.337 3.223 0.943 4.65C3.65 16.73 4.26 17 5 17c.74 0 1.35-.27 1.057-.35C7.663 15.223 8 13.656 8 12c0-2.21-.895-4.21-2.343-5.657C4.105 4.895 2.105 4 0 4"
                                 ></path>
                               </svg>
-                              Sign in ...
+                              Signing in ...
                             </>
                           ) : (
                             "Sign in"
@@ -194,6 +208,7 @@ const Login = () => {
 
                     <div className="mb-3">
                       <button
+                        type="button"
                         onClick={onGoogleLogin}
                         className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"
                       >

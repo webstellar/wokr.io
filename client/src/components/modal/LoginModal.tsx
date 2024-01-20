@@ -238,7 +238,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
                                       d="M12 2C6.477 2 2 6.477 2 12c0 1.656.337 3.223 0.943 4.65C3.65 16.73 4.26 17 5 17c.74 0 1.35-.27 1.057-.35C7.663 15.223 8 13.656 8 12c0-2.21-.895-4.21-2.343-5.657C4.105 4.895 2.105 4 0 4"
                                     ></path>
                                   </svg>
-                                  Sign in ...
+                                  Signing in ...
                                 </>
                               ) : (
                                 "Sign in"
@@ -249,6 +249,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
 
                         <div className="mb-3">
                           <button
+                            type="button"
                             onClick={onGoogleLogin}
                             className="flex flex-wrap justify-center w-full border border-gray-300 hover:border-gray-500 px-2 py-1.5 rounded-md"
                           >

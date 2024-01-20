@@ -28,6 +28,4 @@ export default {
       },
     },
   },
-  plugins: [require("flowbite/plugin")],
-  /*eslint-env node*/
 };
