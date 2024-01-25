@@ -6,7 +6,6 @@ import { ToastContainer } from "react-toastify";
 import App from "./App.tsx";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 /* client
   .query({
@@ -21,17 +20,13 @@ import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
     `,
   })
   .then((result) => console.log(result)); 
-  */
+*/
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <GoogleReCaptchaProvider
-    reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-  >
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-        <ToastContainer />
-      </AuthProvider>
-    </BrowserRouter>
-  </GoogleReCaptchaProvider>
+  <BrowserRouter>
+    <AuthProvider>
+      <App />
+      <ToastContainer />
+    </AuthProvider>
+  </BrowserRouter>
 );

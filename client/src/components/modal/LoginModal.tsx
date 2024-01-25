@@ -32,7 +32,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
       createUser();
       setUserUpdated(false); // Reset the flag
     }
-  }, [userUpdated, createUser]);
+  }, [userUpdated, createUser, navigate]);
 
   const cancelButtonRef = useRef(null);
 
@@ -50,14 +50,12 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
           payload: { email: String(user.email), token: idTokenResult },
         });
 
-        setUserUpdated(true);
-
-        setLoading(false);
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,
           type: "success",
         });
+
         setTimeout(function () {
           navigate("/post-a-job");
         }, 2000);
@@ -66,14 +64,17 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
+      })
+      .finally(async () => {
+        await createUser();
+        setLoading(false);
+        console.log("Peter this is not working");
       });
   };
 
-  const onGoogleLogin = () => {
-    signInWithPopup(auth, googleProvider)
+  const onGoogleLogin = async () => {
+    await signInWithPopup(auth, googleProvider)
       .then(async (result) => {
-        //const credential = GoogleAuthProvider.credentialFromResult(result);
-        //const idTokenResult = credential?.idToken;
         const idTokenResult = await getIdToken(result.user);
         const user = result.user;
 
@@ -82,7 +83,7 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
           payload: { email: String(user.email), token: String(idTokenResult) },
         });
 
-        setUserUpdated(true);
+        await createUser();
 
         toast("Logged in successfully", {
           hideProgressBar: true,
@@ -95,8 +96,9 @@ const LoginModal = ({ setOpen, open }: ModalProps) => {
         }, 2000);
       })
       .catch((error) => {
-        //const errorCode = error.code;
+        const errorCode = error.code;
         const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
         //const email = error.customData.email;
         //const credential = GoogleAuthProvider.credentialFromError(error);
         toast(errorMessage, {

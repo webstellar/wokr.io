@@ -32,11 +32,12 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
   const [createUser] = useMutation(useNewProfileMutation, {});
 
   useEffect(() => {
+    setEmail(window.localStorage.getItem("emailForSignIn")!);
     if (userUpdated) {
       createUser();
       setUserUpdated(false); // Reset the flag
     }
-  }, [userUpdated, createUser]);
+  }, [userUpdated, createUser, navigate]);
 
   const handleNext = async () => {
     navigate("/setup-profile");
@@ -73,18 +74,18 @@ const RegisterModal = ({ setOpen, open }: ModalProps) => {
       });
   };
 
-  const onGoogleLogin = () => {
-    signInWithPopup(auth, googleProvider)
+  const onGoogleLogin = async () => {
+    await signInWithPopup(auth, googleProvider)
       .then(async (result) => {
         const user = result.user;
-        const idTokenResult = await getIdToken(user);
+        const idTokenResult = await getIdToken(result.user);
 
         dispatch({
           type: "LOGGED_IN_USER",
-          payload: { email: String(user.email), token: String(idTokenResult) },
+          payload: { email: String(user.email), token: idTokenResult },
         });
 
-        setUserUpdated(true);
+        await createUser();
         handleNext();
       })
       .catch((error) => {

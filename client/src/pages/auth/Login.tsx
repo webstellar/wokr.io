@@ -14,10 +14,10 @@ import { useNewProfileMutation } from "../../hooks/useNewProfileMutation.js";
 const Login = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [userUpdated, setUserUpdated] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userUpdated, setUserUpdated] = useState<boolean>(false);
   const [createUser] = useMutation(useNewProfileMutation, {});
 
   useEffect(() => {
@@ -62,16 +62,17 @@ const Login = () => {
   const onGoogleLogin = () => {
     signInWithPopup(auth, googleProvider)
       .then(async (result) => {
-        console.log(result);
         const user = result.user;
-        const idTokenResult = await getIdToken(user);
+        const idTokenResult = await getIdToken(result.user);
 
         dispatch({
           type: "LOGGED_IN_USER",
-          payload: { email: String(user.email), token: String(idTokenResult) },
+          payload: { email: String(user.email), token: idTokenResult },
         });
 
         setUserUpdated(true);
+        console.log("here we passed");
+
         toast("Logged in successfully", {
           hideProgressBar: true,
           autoClose: 2000,

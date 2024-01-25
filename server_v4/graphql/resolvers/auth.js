@@ -7,7 +7,7 @@ import { User } from "../../models/user.js";
 
 const createUser = async (_, args, { req }) => {
   //console.log(args.input.username);
-  //console.log("HEADERS HERE ", req.headers);
+  console.log("AUTHTOKEN", req.headers.authtoken);
   const currentUser = await authCheck(req);
   const user = await User.findOne({ email: currentUser.email });
 
@@ -15,7 +15,7 @@ const createUser = async (_, args, { req }) => {
     ? user
     : new User({
         email: currentUser.email,
-        username: generateFromEmail(currentUser.email, 4), //temporary
+        username: generateFromEmail(currentUser.email, 4),
       }).save();
 };
 

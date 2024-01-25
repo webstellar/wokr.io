@@ -162,6 +162,7 @@ const LoggedInHeader = () => {
                         {({ active }) => (
                           <Link to={link.href} className="flex">
                             <button
+                              type="button"
                               className={`${
                                 active
                                   ? "bg-wokr-red-100 text-white"
@@ -182,6 +183,7 @@ const LoggedInHeader = () => {
                         {({ active }) => (
                           <Link to={link.href} className="flex">
                             <button
+                              type="button"
                               className={`${
                                 active
                                   ? "bg-wokr-red-100 text-white"
@@ -200,6 +202,7 @@ const LoggedInHeader = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          type="button"
                           onClick={logOut}
                           id="logout"
                           title="logout"

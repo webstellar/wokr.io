@@ -94,11 +94,6 @@ const CompleteRegistration = () => {
             payload: { email: String(user.email), token: idTokenResult },
           });
 
-          /*      await createUser({
-            variables: { input: { email: user.email, username: "Peter" } },
-          }); */
-
-          //await createUser();
           setUserUpdated(true);
           handleNext();
         })

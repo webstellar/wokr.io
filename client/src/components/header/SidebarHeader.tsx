@@ -10,7 +10,7 @@ import {
 } from "react-icons/hi";
 
 //data
-import { homeMenu, profileLinks, settinglinks } from "../../data/data";
+import { profileLinks, settinglinks } from "../../data/data";
 
 type Props = {
   onMenuButtonClick(): void;

@@ -24,6 +24,8 @@ const App: React.FC = () => {
     },
   });
 
+  console.log("client ", client);
+
   return (
     <ApolloProvider client={client}>
       <Routes>
